@@ -1,0 +1,273 @@
+<html lang="en" ng-app="assignApp" ng-controller="assignCtrl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supervisor Manual Assignment</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="customCss" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+   <script src="customJs"></script>
+    <script id="myDataObj" >
+      dataObj
+    </script>
+</head>
+<body>
+<div class="container-fluid py-3">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h4 class="mb-1"><i class="bi bi-clipboard-check me-2 text-primary"></i>Assignment Dashboard</h4>
+        <p class="text-muted mb-0 small">Manage and assign picking tasks to your team</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-light"><i class="bi bi-arrow-repeat"></i> Refresh</button>
+        <button class="btn btn-sm btn-primary"><i class="bi bi-save"></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-label">Pending SOs</div>
+      <div class="stat-value">12</div>
+      <div class="small text-muted"><i class="bi bi-arrow-up text-success"></i> 2 from yesterday</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Items to Assign</div>
+      <div class="stat-value">47</div>
+      <div class="small text-muted">Across all orders</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Available Pickers</div>
+      <div class="stat-value">{{getAvailablePickers().length}}</div>
+      <div class="small text-muted">Ready for assignments</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Busy Pickers</div>
+      <div class="stat-value">{{getBusyPickers().length}}</div>
+      <div class="small text-muted">Currently working</div>
+    </div>
+  </div>
+
+  <!-- Filters Card -->
+  <div class="filter-card">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label small mb-1">Search</label>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input class="form-control" ng-model="filters.search" placeholder="Client, PO, Project...">
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label small mb-1">Item Type</label>
+        <select class="form-select form-select-sm" ng-model="filters.type">
+          <option value="">All Types</option>
+          <option value="inv">Inventory</option>
+          <option value="noninv">Non-Inventory</option>
+          <option value="res">Reservations</option>
+          <option value="bo">Backorder</option>
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label small mb-1">Date</label>
+        <select class="form-select form-select-sm" ng-model="filters.dateRange">
+          <option value="today">Today</option>
+          <option value="tomorrow">Tomorrow</option>
+          <option value="week">This Week</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label small mb-1">Delivery</label>
+        <select class="form-select form-select-sm" ng-model="filters.delivery">
+          <option value="">All Options</option>
+          <option value="standard">Standard</option>
+          <option value="express">Express</option>
+          <option value="pickup">Pickup</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label small mb-1">Location</label>
+        <select class="form-select form-select-sm" ng-model="filters.location">
+          <option value="">All Locations</option>
+          <option value="WH1">WH1</option>
+          <option value="WH2">WH2</option>
+          <option value="WH3">WH3</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- SO List -->
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-title">Sales Orders</div>
+        <div class="card-body">
+          <div class="accordion" id="soAccordion">
+            <div class="accordion-item" ng-repeat="so in salesOrders | filter:filters.search" ng-if="!filters.type || so.type === filters.type">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed py-2" type="button" data-bs-toggle="collapse" data-bs-target="#so{{so.id}}">
+                  <div class="so-header">
+                    <div class="so-info">
+                      <div class="small fw-semibold">{{so.id}} - {{so.customer}}</div>
+                      <div class="so-meta">
+                        <span class="me-2">{{so.totalQty}} Qty</span>
+                        <span class="me-2">{{so.items.length}} Items</span>
+                        <span class="badge bg-secondary me-2">{{so.type.toUpperCase()}}</span>
+                        <span class="badge bg-secondary">{{so.deliveryOption}}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <span class="assignment-badge" ng-class="{'bg-success': so.fullyAssigned, 'bg-warning': so.partiallyAssigned, 'bg-light text-dark': !so.assignedCount}">
+                        {{so.assignedCount || 0}}/{{so.items.length}}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              </h2>
+              <div id="so{{so.id}}" class="accordion-collapse collapse">
+                <div class="accordion-body py-2 px-3">
+                  <table class="table table-hover table-sm compact-table mb-2">
+                    <thead>
+                      <tr>
+                        <th>Item</th>
+                        <th>Loc</th>
+                        <th>Bin</th>
+                        <th>Qty</th>
+                        <th>Type</th>
+                        <th style="width: 220px;">Picker</th>
+                        <!-- <th style="width: 120px;">Status</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="line in so.items | filter:locationFilter" class="item-row">
+                        <td>{{line.item}}</td>
+                        <td>{{line.location}}</td>
+                        <td>{{line.bin}}</td>
+                        <td>{{line.qty}}</td>
+                        <td><span class="badge bg-secondary">{{line.type || 'INV'}}</span></td>
+                        <td>
+                          <select class="form-select form-select-sm" ng-model="line.picker" ng-change="updateAssignmentStatus()"
+                            ng-options="p as p.name for p in pickers track by p.id">
+                            <option value="">-- Select --</option>
+                          </select>
+                          <div class="small text-success mt-1" ng-if="line.picker">
+                            <i class="bi bi-check-circle"></i> {{line.picker.name}}
+                          </div>
+                        </td>
+                        <!-- <td>
+                          <select class="form-select form-select-sm" ng-model="line.status" ng-change="updateAssignmentStatus()">
+                            <option value="pending">Pending</option>
+                            <option value="picked">Picked</option>
+                            <option value="staged">Staged</option>
+                            <option value="canceled">Canceled</option>
+                          </select>
+                          <span class="badge mt-1 status-{{line.status || 'pending'}}">
+                            {{(line.status || 'pending') | uppercase}}
+                          </span>
+                        </td> -->
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <!-- Assign Entire SO Button -->
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <span class="small text-secondary">Assign all to one picker:</span>
+                    </div>
+                    <div class="d-flex">
+                      <select class="form-select form-select-sm w-auto me-2" ng-model="so.bulkPicker"
+                        ng-options="p as p.name for p in pickers track by p.id">
+                        <option value="">-- Select --</option>
+                      </select>
+                      <button class="btn btn-sm btn-primary" ng-click="assignEntireSO(so)" ng-disabled="!so.bulkPicker">
+                        <i class="bi bi-check-all"></i> Assign All
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-info mt-3 mb-0 mx-2 py-2 small" ng-if="salesOrders.length === 0">
+            <i class="bi bi-info-circle"></i> No sales orders match your current filters.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Picker Sidebar -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-title">Pickers</div>
+        <div class="card-body">
+          <div class="picker-header">
+            <h6 class="mb-0">Team Status</h6>
+            <div class="picker-status">
+              <span class="status-badge status-available"></span>
+              <span class="me-2">Available: {{getAvailablePickers().length}}</span>
+              <span class="status-badge status-busy"></span>
+              <span>Busy: {{getBusyPickers().length}}</span>
+            </div>
+          </div>
+
+          <div class="list-group">
+            <div class="picker-item" ng-repeat="p in pickers">
+              <div class="picker-name">
+                <span class="status-badge" ng-class="{'status-available': isPickerAvailable(p), 'status-busy': !isPickerAvailable(p)}"></span>
+                {{p.name}}
+                <span class="badge ms-2" ng-class="{'bg-success': isPickerAvailable(p), 'bg-warning': !isPickerAvailable(p)}">
+                  {{isPickerAvailable(p) ? 'Available' : 'Busy'}}
+                </span>
+              </div>
+              <div class="picker-assignments">
+                <span class="badge rounded-pill bg-primary">{{p.assignedItems}} items</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-3">
+            <h6 class="mb-2">Status Breakdown</h6>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge status-pending">Pending: {{getStatusCount('pending')}}</span>
+              <span class="badge status-picked">Picked: {{getStatusCount('picked')}}</span>
+              <!-- <span class="badge status-staged">Staged: {{getStatusCount('staged')}}</span>
+              <span class="badge status-canceled">Canceled: {{getStatusCount('canceled')}}</span> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-title">Quick Actions</div>
+        <div class="card-body quick-actions">
+          <button class="btn btn-outline-light">
+            <i class="bi bi-clock-history me-2"></i> View Assignment History
+          </button>
+          <!-- <button class="btn btn-outline-light">
+            <i class="bi bi-printer me-2"></i> Print Assignments
+          </button>
+          <button class="btn btn-outline-light">
+            <i class="bi bi-arrow-left-right me-2"></i> Reassign Items
+          </button>
+          <button class="btn btn-outline-light">
+            <i class="bi bi-graph-up me-2"></i> Performance Report
+          </button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
