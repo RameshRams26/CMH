@@ -1,0 +1,156 @@
+<customrecordtype scriptid="customrecord_nst_wms_v3_features">
+  <accesstype>CUSTRECORDENTRYPERM</accesstype>
+  <allowattachments>F</allowattachments>
+  <allowinlinedeleting>F</allowinlinedeleting>
+  <allowinlinedetaching>T</allowinlinedetaching>
+  <allowinlineediting>F</allowinlineediting>
+  <allowmobileaccess>F</allowmobileaccess>
+  <allownumberingoverride>F</allownumberingoverride>
+  <allowquickadd>F</allowquickadd>
+  <allowquicksearch>F</allowquicksearch>
+  <allowuiaccess>T</allowuiaccess>
+  <description></description>
+  <enabledle>T</enabledle>
+  <enablekeywords>T</enablekeywords>
+  <enablemailmerge>F</enablemailmerge>
+  <enablenametranslation>T</enablenametranslation>
+  <enablenumbering>F</enablenumbering>
+  <enableoptimisticlocking>F</enableoptimisticlocking>
+  <enablesystemnotes>T</enablesystemnotes>
+  <hierarchical>F</hierarchical>
+  <icon></icon>
+  <iconbuiltin>T</iconbuiltin>
+  <iconindex></iconindex>
+  <includeinsearchmenu>T</includeinsearchmenu>
+  <includename>T</includename>
+  <isinactive>F</isinactive>
+  <isordered>T</isordered>
+  <numberinginit></numberinginit>
+  <numberingmindigits></numberingmindigits>
+  <numberingprefix></numberingprefix>
+  <numberingsuffix></numberingsuffix>
+  <recordname>NST | SWMS | V3 |Features</recordname>
+  <showcreationdate>F</showcreationdate>
+  <showcreationdateonlist>F</showcreationdateonlist>
+  <showid>F</showid>
+  <showlastmodified>F</showlastmodified>
+  <showlastmodifiedonlist>F</showlastmodifiedonlist>
+  <shownotes>T</shownotes>
+  <showowner>F</showowner>
+  <showownerallowchange>F</showownerallowchange>
+  <showowneronlist>F</showowneronlist>
+  <instances>
+    <instance scriptid="val_93553_t1381315_226">
+      <isinactive>T</isinactive>
+      <name>Inventory Lookup</name>
+    </instance>
+    <instance scriptid="val_93554_t1381315_669">
+      <isinactive>T</isinactive>
+      <name>Adjust Qty</name>
+    </instance>
+    <instance scriptid="val_93555_t1381315_753">
+      <isinactive>T</isinactive>
+      <name>Assign Order to Picker</name>
+    </instance>
+    <instance scriptid="val_93556_t1381315_668">
+      <isinactive>T</isinactive>
+      <name>ReAssign Order to Picker</name>
+    </instance>
+    <instance scriptid="val_93557_t1381315_739">
+      <isinactive>F</isinactive>
+      <name>Pick List</name>
+    </instance>
+    <instance scriptid="val_93558_t1381315_218">
+      <isinactive>F</isinactive>
+      <name>Pack Order</name>
+    </instance>
+    <instance scriptid="val_93559_t1381315_317">
+      <isinactive>F</isinactive>
+      <name>Ship Order</name>
+    </instance>
+    <instance scriptid="val_93560_t1381315_493">
+      <isinactive>F</isinactive>
+      <name>Receive List</name>
+    </instance>
+    <instance scriptid="val_93561_t1381315_443">
+      <isinactive>F</isinactive>
+      <name>Receive Order</name>
+    </instance>
+    <instance scriptid="val_93562_t1381315_841">
+      <isinactive>F</isinactive>
+      <name>Stage Bin Transfer</name>
+    </instance>
+    <instance scriptid="val_93563_t1381315_393">
+      <isinactive>F</isinactive>
+      <name>Bin Lookup</name>
+    </instance>
+    <instance scriptid="val_93564_t1381315_802">
+      <isinactive>F</isinactive>
+      <name>Create BinPutAway</name>
+    </instance>
+    <instance scriptid="val_93565_t1381315_385">
+      <isinactive>F</isinactive>
+      <name>Bin PutAway List</name>
+    </instance>
+    <instance scriptid="val_93566_t1381315_308">
+      <isinactive>F</isinactive>
+      <name>Create Bin Transfer</name>
+    </instance>
+    <instance scriptid="val_93567_t1381315_197">
+      <isinactive>F</isinactive>
+      <name>Create Inventory Transfer</name>
+    </instance>
+    <instance scriptid="val_93568_t1381315_239">
+      <isinactive>F</isinactive>
+      <name>Inbound Shipments List</name>
+    </instance>
+    <instance scriptid="val_93569_t1381315_701">
+      <isinactive>F</isinactive>
+      <name>Receive Inbound Shipments</name>
+    </instance>
+    <instance scriptid="val_93570_t1381315_569">
+      <isinactive>F</isinactive>
+      <name>Create Inventory Count Record</name>
+    </instance>
+    <instance scriptid="val_93571_t1381315_820">
+      <isinactive>F</isinactive>
+      <name>Configure Inventory Count</name>
+    </instance>
+    <instance scriptid="val_93572_t1381315_919">
+      <isinactive>F</isinactive>
+      <name>Build Work Order</name>
+    </instance>
+    <instance scriptid="val_94531_t1381315_496">
+      <isinactive>F</isinactive>
+      <name>Pack List</name>
+    </instance>
+    <instance scriptid="val_94532_t1381315_864">
+      <isinactive>F</isinactive>
+      <name>Receive RMA</name>
+    </instance>
+    <instance scriptid="val_94879_t1381315_779">
+      <isinactive>F</isinactive>
+      <name>Ship Transfer Order</name>
+    </instance>
+    <instance scriptid="val_99764_t1381315_840">
+      <isinactive>F</isinactive>
+      <name>Receive Transfer Order</name>
+    </instance>
+    <instance scriptid="val_99971_t1381315_930">
+      <isinactive>F</isinactive>
+      <name>Create Count Record</name>
+    </instance>
+    <instance scriptid="val_100082_t1381315_928">
+      <isinactive>F</isinactive>
+      <name>Inventory Count List</name>
+    </instance>
+    <instance scriptid="val_100522_t1381315_333">
+      <isinactive>F</isinactive>
+      <name>Configure Count Record</name>
+    </instance>
+    <instance scriptid="val_100816_t1381315_155">
+      <isinactive>F</isinactive>
+      <name>Inbound Shipments</name>
+    </instance>
+  </instances>
+</customrecordtype>

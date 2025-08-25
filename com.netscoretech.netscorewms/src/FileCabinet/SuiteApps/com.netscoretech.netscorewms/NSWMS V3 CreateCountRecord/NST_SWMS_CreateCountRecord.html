@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inv Count Record</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="customCss" />
+    <link rel="stylesheet" href="responsiveCss" />
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="customJs"></script>
+    <script id="myDataObj">
+      dataObj
+    </script>
+        <style>
+          .customClass {
+            background-color: #45dc4554;
+          }
+    </style>
+  </head>
+  <body ng-app="myApp" ng-controller="createcountrecordController">
+    <div ng-show="loading" class="loader loader-wrapper">
+      <img src="loaderUrl" />
+    </div>
+    <!--nswms_main_header starts-->
+    <div class="nswms_main_header d-flex justify-content-between align-items-center">
+      <div class="header_left">
+        <span ng-click="goBack()">
+          <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="header_center_logo">
+        <span ng-click="goBack()">
+          <h4>Create Count Record</h4>
+        </span>
+      </div>
+      <div class="header_right">
+        <a ng-click="logOut()">
+          <i class="fa fa-power-off" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+    <!--nswms_main_header ends-->
+    <!--nswms_main_body starts-->
+    <div class="nswms_main_body">
+      <div class="container">
+        <div class="inv_adj_fields mb-2">
+          <div class="row d-flex justify-content-between">
+            <div class="col-md-4 col-sm-6 col-6 col-xs-6">
+              <p class="fw-bolder mb-1">
+                <i class="fa fa-map-marker" aria-hidden="true" style="color:#bd3b3b;"></i>
+                <span class="fw-normal"> {{locObj.name}}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="input_fields mb-2 shiporder">
+          <div class="row justify-content-between" transactions>
+            <!-- <div class="col-md-3 col-lg-3 col-sm-3 col-3 col-xs-3 cleft">
+              <div class="ns_input-right">
+                <input type="text" ng-model="scannedItem" class="form-control" ng-blur="getItemDetails()" placeholder="Scan item / UPC" id="scanitem" />
+                <i ng-click="openScanner()" class="fa fa-camera cam-icon" aria-hidden="true"></i>
+              </div>
+            </div> -->
+            <div class="col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
+              <div class="input-group inv_adj_status_list">
+                <input type="text" ng-model="scannedItem" class="form-control" ng-blur="getItemDetails()" placeholder="Scan item / UPC" id="scanitem" />
+           <div class="input-group-append" ng-click="openScanner()">
+                  <div class="camera-icon">
+                    <i class="fas fa-camera"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6 col-xs-6 cright">
+              <p class="inv_adj_id  mb-1 cleft">Adj Account : <span class="fw-normal">{{setUpData.defaultAccntText}}</span>
+              </p>
+            </div>
+          </div>
+          <div class="row justify-content-between transactions">
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6 col-xs-6 cleft">
+              <p class="inv_adj_id  mb-1 cleft">BackUp ID : <span class="fw-normal">{{backUpRecText}}</span>
+              </p>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6 col-xs-6 cright">
+              <p class="inv_adj_id  mb-1 ">Item Count : <span class="fw-normal">{{noOfItems}}</span>
+              </p>
+              </iv>
+            </div>
+          </div>
+          <div class="pickup_main_card mt-1">
+            <div class="row justify-content-between item-lookup-details">
+              <div class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2" ng-repeat="(item,itemObj) in backUpRecordData">
+                <div class="card p-2 customClass" data-bs-toggle="modal">
+                  <table>
+                    <tr>
+                      <td class="card-td1">
+                        <b>Item</b>
+                      </td>
+                      <td class="card-td2">:</td>
+                      <td class="card-td3">{{itemObj.itemName}}</td>
+                    </tr>
+                    <tr>
+                      <td class="card-td1">
+                        <b> Bin </b>
+                      </td>
+                      <td class="card-td2">:</td>
+                      <td class="card-td3">{{itemObj.fromBinNOText}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Create Count Record Popup starts-->
+          <div class="modal fade" id="exampleModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close-button" data-bs-dismiss="modal" aria-label="Close"> Close </button>
+                  <button type="button" ng-click="submitConfiguredItem()" class="save-button"> Save
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="inv_adj_main_body">
+                    <div class="inv_adj_popup_lft_img d-flex justify-content-start">
+                      <div class="item_image">
+                        <img src="{{itemData.image}}">
+                      </div>
+                      <div class="inv_adj_item_data">
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td class="card-td1">
+                                <b>Item</b>
+                              </td>
+                              <td class="card-td2">:</td>
+                              <td class="card-td3 itemname"> {{itemData.itemName}} </td>
+                              <td class="card-td3 itemname"> {{itemNameTrim}} </td>
+                            </tr>
+                            <tr>
+                              <td class="card-td1">
+                                <b>Bin</b>
+                              </td>
+                              <td class="card-td2">:</td>
+                              <td class="card-td3 ">
+                                <div class="inv_adj_status_list">
+                                  <select ng-model="positiveAdj.fromBinNO" ng-change="selectFromBin()" ng-disabled="disableQty" id="fromBin" class="form-control" ng-options="option.id as option.value for option in allBins">
+                                    <option value="" disabled>Bin</option>
+                                  </select>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="card-td1">
+                                <b>Add</b>
+                              </td>
+                              <td class="card-td2">:</td>
+                              <td class="card-td3 itemname">     
+                                <button type="button" class="btn btn-add-details" ng-click="addPosConfiguredItem()">Add Details</button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <hr>
+                  
+                    <div class="inv_adj_popup_detail">
+                      <div class="row justify-content-between">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2" ng-repeat="item in configuredItems">
+                          <div class="card p-2">
+                            <div class="checkbox-wrapper">
+                              <i class="fa fa-trash" aria-hidden="true" ng-click="deleteConfiguredItem($index)"></i>
+                            </div>
+                            <table>
+                              <tbody>
+                                <tr>
+                                  <td class="card-td1">
+                                    <b> Item</b>
+                                  </td>
+                                  <td class="card-td2">:</td>
+                                  <td class="card-td3">{{item.itemName}}</td>
+                                </tr>
+                                <tr>
+                                  <td class="card-td1">
+                                    <b> Bin</b>
+                                  </td>
+                                  <td class="card-td2">:</td>
+                                  <td class="card-td3">{{item.fromBinNOText}}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <footer class="inv_adj_footer button" ng-click="approveCompleteBackUp('approve')">
+            <span class="footer-desktop" >Submit</span>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <!--nswms_main_body ends-->
+  </body>
+</html>

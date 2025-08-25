@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #5a6263;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9 {
+        stroke: #22263e;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+
+      .cls-2 {
+        fill: #b8f4ef;
+      }
+
+      .cls-3 {
+        fill: #8cbafa;
+      }
+
+      .cls-4 {
+        fill: #758486;
+      }
+
+      .cls-5 {
+        fill: #f2c397;
+      }
+
+      .cls-6 {
+        fill: #45bdf0;
+      }
+
+      .cls-7 {
+        fill: #e88d69;
+      }
+
+      .cls-7, .cls-8 {
+        stroke-linecap: round;
+      }
+
+      .cls-8 {
+        fill: #bcbec0;
+      }
+
+      .cls-9 {
+        fill: #c38d69;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="cls-2" x="11.27" y="13.24" width="38.35" height="72.19" rx="1.36" ry="1.36" transform="translate(60.89 98.66) rotate(-180)"/>
+    <path class="cls-3" d="M11.27,13.24H49.62V30.36c0,.66-.53,1.19-1.19,1.19H12.46c-.66,0-1.19-.53-1.19-1.19V13.24h0Z" transform="translate(60.89 44.79) rotate(-180)"/>
+    <rect class="cls-8" x="11.27" y="31.54" width="38.35" height="22.64" transform="translate(60.89 85.72) rotate(-180)"/>
+    <line class="cls-2" x1="44.74" y1="85.42" x2="44.74" y2="90.54"/>
+    <line class="cls-2" x1="16.33" y1="85.42" x2="16.33" y2="90.54"/>
+  </g>
+  <g>
+    <rect class="cls-6" x="30.44" y="31.55" width="19.17" height="22.99" rx=".81" ry=".81" transform="translate(80.06 86.09) rotate(-180)"/>
+    <rect class="cls-6" x="37.34" y="31.55" width="5.39" height="9.5" transform="translate(80.06 72.61) rotate(180)"/>
+  </g>
+  <g>
+    <rect class="cls-6" x="11.27" y="31.55" width="21.46" height="22.99" rx=".81" ry=".81" transform="translate(43.99 86.09) rotate(-180)"/>
+    <rect class="cls-6" x="18.98" y="31.55" width="6.03" height="9.5" transform="translate(43.99 72.61) rotate(180)"/>
+  </g>
+  <g>
+    <rect class="cls-6" x="32.72" y="30.56" width="24.52" height="24.4" rx=".81" ry=".81" transform="translate(89.97 85.51) rotate(-180)"/>
+    <rect class="cls-6" x="41.54" y="30.56" width="6.89" height="8.26" transform="translate(89.97 69.37) rotate(180)"/>
+  </g>
+  <path class="cls-7" d="M74.3,26.67h.95c2.89,0,5.23,2.34,5.23,5.23v20.7h-11.41V31.9c0-2.89,2.34-5.23,5.23-5.23Z" transform="translate(-4.29 9.45) rotate(-7.03)"/>
+  <path class="cls-4" d="M70.7,53.2l-7.19,10.51-1.5,20.92c-.17,2.33,1.39,4.52,3.69,4.91,2.64,.44,5.02-1.48,5.21-4.08l1.51-21.11,9.43-12.31c.07-.09,0-.21-.11-.2l-11.04,1.36Z"/>
+  <path class="cls-1" d="M82.02,52.68v16.71l6.22,12.54c1.1,2.22,.29,4.92-1.85,6.17h0c-2.36,1.38-5.39,.47-6.61-1.98l-7.01-14.15-.35-7.64,9.07-11.84c.17-.23,.54-.1,.54,.18Z"/>
+  <path class="cls-5" d="M61.3,40.3l-6.79,.18c-2.02,.05-3.63,1.71-3.63,3.73h0c0,2.14,1.79,3.83,3.92,3.72l11.06-.58c.14,0,.26-.08,.34-.19l9.14-13.22c1.18-1.7,.74-4.04-.97-5.2l-.49-.33c-1.72-1.17-4.07-.7-5.21,1.04l-7.01,10.66c-.08,.12-.21,.19-.36,.2Z"/>
+  <circle class="cls-9" cx="71.3" cy="17.64" r="8.18"/>
+</svg>

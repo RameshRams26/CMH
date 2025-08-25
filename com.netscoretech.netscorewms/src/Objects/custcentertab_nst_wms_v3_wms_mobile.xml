@@ -1,0 +1,10 @@
+<centertab scriptid="custcentertab_nst_wms_v3_wms_mobile">
+  <allcustomers>F</allcustomers>
+  <allemployees>F</allemployees>
+  <allpartners>F</allpartners>
+  <allroles>T</allroles>
+  <allvendors>F</allvendors>
+  <audslctrole></audslctrole>
+  <center>BASIC</center>
+  <label>NST WMS MOBILE</label>
+</centertab>

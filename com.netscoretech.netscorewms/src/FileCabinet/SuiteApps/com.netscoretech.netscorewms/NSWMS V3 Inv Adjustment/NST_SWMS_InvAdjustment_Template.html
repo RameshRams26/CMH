@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Inventory Adjustments</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="customCss" />
+    <link rel="stylesheet" href="responsiveCss" />
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="customJs"></script>
+    <script id="myDataObj">
+      dataObj
+    </script>
+    <style>
+      .togglebutton button {
+        width: 95px;
+        height: 30px;
+        border-radius: 25px;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 13px;
+      }
+
+      .on {
+        background-color: green;
+        border: none;
+      }
+
+      .off {
+        background-color: #bd3b3b;
+        border: none;
+      }
+
+    </style>
+  </head>
+  <body ng-app="myApp" ng-controller="invAdjustmentController">
+    <div ng-show="loading" class="loader loader-wrapper">
+      <img src="loaderUrl" />
+    </div>
+    <!--nswms_main_header starts-->
+    <div class="nswms_main_header d-flex justify-content-between align-items-center">
+      <div class="header_left">
+        <span ng-click="goBack()">
+          <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="header_center_logo" ng-click="goBack()">
+        <h4>Inventory Adjustments</h4>
+      </div>
+      <div class="header_right">
+        <span ng-click="logOut()">
+          <i class="fa fa-power-off" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+    <!--nswms_main_header ends-->
+    <!--nswms_main_body starts-->
+    <div class="nswms_main_body">
+      <div class="container">
+        <div class="inv_adj_fields d-flex justify-content-between">
+          <p class="inv_adj_location_id fw-bolder mb-1">
+            <i class="fa fa-map-marker" aria-hidden="true"></i>
+            <span class="fw-normal"> {{locObj.name}}</span>
+          </p>
+        </div>
+        <div class="input_fields pt-2">
+          <div class="row justify-content-between">
+            <div class="col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">             
+              <div class="input-group inv_adj_status_list">
+                <input type="text" ng-model="scannedItem" class="form-control" ng-blur="getItemDetails()" placeholder="Scan item / UPC" id="scanitem" / autofocus>
+                <div class="input-group-append" id="cameraDiv" ng-click="openScanner('scanning')" >
+                  <div class="camera-icon">
+                    <i class="fas fa-camera"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
+              <div class="form-group ns_input-left">
+                <div class="autocomplete-dropdown-container">
+                  <input type="text" id="myInput" class="form-control" ng-model="searchText" ng-change="search()" placeholder="Search item">
+                  <i class="fa fa-search search-icon" aria-hidden="true"></i>
+                  <div class="autocomplete-dropdown" ng-if="showSuggestions">
+                    <a ng-repeat="result in results" ng-click="selectResult(result)">{{ result.name }}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="inv_adj_fields d-flex justify-content-between transactions">
+            <p class="inv_adj_id  mb-1">BackUp ID: <span class="fw-normal">{{backUpRecText}}</span>
+            </p>
+            <p class="inv_adj_item_id  mb-1"> Item Count: <span class="fw-normal">{{backUpRecordData.length}}</span>
+            </p>
+          </div>
+          <div class="inv_adj_main_card mt-1">
+            <div class="row justify-content-between item-lookup-details">
+              <!-- usengrepeat -->
+              <div class="card-rht-space col-md-6 col-sm-6 col-xs-12 col-12 mt-2 inv_adj_card" ng-repeat="item in backUpRecordData" ng-if="item.newQty">
+                <div class="card p-2" style="background-color: #45dc4554;">
+                  <table>
+                    <tr>
+                      <td class="card-td1">
+                        <b>Item</b>
+                      </td>
+                      <td class="card-td2">:</td>
+                      <td class="card-td3">{{item.itemName}}</td>
+                    </tr>
+                    <tr>
+                      <td class="card-td1">
+                        <b>On Hand</b>
+                      </td>
+                      <td class="card-td2">:</td>
+                      <td class="card-td3">{{item.onHand}}</td>
+                    </tr>
+                    <tr>
+                      <td class="card-td1">
+                        <b>Adj Qty</b>
+                      </td>
+                      <td class="card-td2">:</td>
+                      <td class="card-td3">{{item.adjQty}}</td>
+                    </tr>
+                    <tr>
+                      <td class="card-td1">
+                        <b>New Qty</b>
+                      </td>
+                      <td class="card-td2">:</td>
+                      <td class="card-td3">{{item.newQty}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <footer class="inv_adj_footer button " ng-if="setUpData['approvalForAdj'] == false" ng-click="approveCompleteBackUp('complete')">
+            <span class="footer-desktop">Complete</span>
+          </footer>
+          <footer class="inv_adj_footer button " ng-if="setUpData['approvalForAdj']" ng-click="approveCompleteBackUp('approve')">
+            <span class="footer-desktop">Approve</span>
+          </footer>
+          <!--Inventory Adjustment Popup starts-->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"  aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close-button" data-bs-dismiss="modal" aria-label="Close" focus-on-close="scanitem"> Close </button>
+                  <button type="button" class="save-button" ng-click="submitConfiguredItem()"> Save </button>
+                </div>
+                <div class="modal-body">
+                  <div class="inv_adj_main_body">
+                    <div class="inv_adj_popup_lft_img d-flex justify-content-start">
+                      <div class="item_image">
+                        <img src="{{itemData.image}}">
+                      </div>
+                      <div class="inv_adj_item_data">
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td class="card-td1">
+                                <b>Item</b>
+                              </td>
+                              <td class="card-td2">:</td>
+                              <td class="card-td3"> {{itemData.itemName}} </td>
+                            </tr>
+                            <tr>
+                              <td class="card-td1">
+                                <b>UPC</b>
+                              </td>
+                              <td class="card-td2">:</td>
+                              <td class="card-td3">{{itemData.upc}}</td>
+                            </tr>
+                            <tr ng-if="setUpData['useBins'] == true && itemData['isBinItem'] == true">
+                              <td class="card-td1">
+                                <b>Pref. Bin</b>
+                              </td>
+                              <td class="card-td2">:</td>
+                              <td class="card-td3">{{preferdBins[urlObj["locationId"]]}}</td>
+                            </tr>
+                            <tr>
+                              <td class="card-td1">
+                                <b>OnHand</b>
+                              </td>
+                              <td class="card-td2">:</td>
+                              <td class="card-td3">{{invBalance["onHand"]}}</td>
+                            </tr>
+                            <tr>
+                              <td class="card-td1">
+                                <b>Available</b>
+                              </td>
+                              <td class="card-td2">:</td>
+                              <td class="card-td3">{{invBalance["available"]}}</td>
+                            </tr>
+                            <tr>
+                              <td class="card-td1">
+                                <b>Adj Type</b>
+                              </td>
+                              <td class="card-td2">:</td>
+                              <td class="card-td3 togglebutton">
+                                <button ng-click="changeAdjustmentType()" ng-class="{ 'on': isPositive, 'off': !isPositive }">
+                                  {{ isPositive ? 'POSITIVE' : 'NEGATIVE' }}
+                                </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <hr>
+                    <!-- POSITIVE ADJUSTMENT -->
+                    <div class="inv_adj_popup_slect" ng-if="isPositive">
+                      <div class="row">
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="itemData['isSerialItem'] == false && itemData['isLotItem'] == false">
+                          <div class="inv_Adj_binlist">
+                            <div class="input-group inv_adj_status_list">
+                              <input type="text" ng-model="positiveAdj.itemOrUpc" ng-blur="scanItemUpc(positiveAdj.itemOrUpc)" class="form-control" placeholder="Scan Item/UPC" id="scanInvOrUpc" autofocus>
+                              <div class="input-group-append" ng-click="openScanner('upc')">
+                                <div class="camera-icon">
+                                  <i class="fas fa-camera"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>                      
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="setUpData['useSerial'] == true && itemData['isSerialItem'] == true">
+                          <div class="inv_Adj_binlist">
+                            <div class="input-group inv_adj_status_list">
+                              <input ng-model="positiveAdj.serialNO" type="text" class="form-control" ng-blur="scanSerialItem(positiveAdj.serialNO)" placeholder="Scan Serial Number" id="scanInvOrUpc" autofocus>
+                              <div class="input-group-append" ng-click="openScanner('serial')">
+                                <div class="camera-icon">
+                                  <i class="fas fa-camera"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-12 grid-padding" ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
+                          <div class="inv_Adj_binlist">
+                            <div class="input-group inv_adj_status_list">
+                              <input ng-model="positiveAdj.lotNO" type="text" class="form-control" ng-blur="scanLotItem('positiveLot')" placeholder="Scan lot Number" id="scanInvOrUpc" ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true" autofocus>
+                              <div class="input-group-append" ng-click="openScanner('lot')">
+                                <div class="camera-icon">
+                                  <i class="fas fa-camera"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="setUpData['useBins'] == true && itemData['isBinItem'] == true">
+                          <div class="inv_adj_status_list">
+                            <select ng-model="positiveAdj.binNO" ng-change="selectPosBin()" class="form-control" ng-options="option.id as option.value for option in allBins" id="selectBin">
+                              <option value="" disabled>Select Bin</option>
+                            </select>
+                            <div class="input-group-append">
+                              <i ng-click="openScanner('serial')" class="fa fa-camera" aria-hidden="true" style="cursor: pointer;"></i>
+                            </div>
+                          </div>
+                        </div> -->
+
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="setUpData['useBins'] == true && itemData['isBinItem'] == true">
+                          <div class="input-group inv_adj_status_list">
+                            <select ng-model="positiveAdj.binNO" ng-change="selectPosBin()" class="form-control" ng-options="option.id as option.value for option in allBins" id="selectBin">
+                              <option value="" disabled>Select Bin</option>
+                            </select>
+                            <div class="input-group-append" ng-click="openScanner('bin')">
+                              <div class="camera-icon">
+                                <i class="fas fa-camera"></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-6 grid-padding" ng-if="setUpData['useInvStatus'] == true">
+                          <div class="inv_adj_status_list">
+                            <select ng-model="positiveAdj.selectedStatus" ng-change="selectPosStatus()" class="form-control" ng-options="option.id as option.value for option in allStatus" id="selectStatus">
+                              <option value="" disabled>Select Status</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding">
+                          <div class="inv_adj_serial_qty">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <button ng-click="decrement()" class="btn btn-qty">-</button>
+                              </div>
+                              <input type="number" ng-model="positiveAdj.qty" name="myInput" ng-blur="enterQuantity()" ng-disabled="disableQty" placeholder="Quantity" class="form-control adj-qty" id="qty" />
+                              <div class="input-group-append">
+                                <button ng-click="increment()" class="btn btn-qty">+</button>
+                              </div>
+                        </div>
+                      </div>
+                          <!-- <div class="inv_adj_serial_qty">
+                            <span>
+                              <input ng-model="positiveAdj.qty" ng-disabled="disableQty" type="text" class="form-control" placeholder="Quantity" id="qty">
+                            </span>
+                          </div> -->
+                        </div>
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
+                          <div class="inv_adj_serial_qty">
+                            <span>
+                              <input ng-model="positiveAdj.date" type="date" id="date" class="form-control">
+                            </span>
+                          </div>
+                        </div>
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding add-button">
+                          <button type="button" class="btn btn-add-details" ng-click="addPosConfiguredItem()">Add Details</button>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- NEGATIVE ADJUSTMENT -->
+                    <div class="inv_adj_popup_slect negative" ng-if="!isPositive">
+                      <div class="row">
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4  grid-padding" ng-if="itemData['isSerialItem'] == false && itemData['isLotItem'] == false">
+                          <div class="inv_Adj_binlist">
+                            <div class="input-group inv_adj_status_list">
+                              <input type="text" ng-model="negativeAdj.itemOrUpc" class="form-control" placeholder="Scan Item/UPC" ng-blur="scanItemUpc(negativeAdj.itemOrUpc)" id="scanInvOrUpc" autofocus>
+                              <div class="input-group-append" ng-click="openScanner('upc')">
+                                <div class="camera-icon">
+                                  <i class="fas fa-camera"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="setUpData['useSerial'] == true && itemData['isSerialItem'] == true">
+                          <div class="inv_Adj_binlist">
+                            <!-- <div class="input-group inv_adj_status_list">
+                              <input type="text" ng-model="negativeAdj.serialNO" class="form-control" ng-blur="scanSerialItem(negativeAdj.serialNO)" placeholder="Scan Serial Number" id="scanInvOrUpc">
+                              <div class="input-group-append" ng-click="openScanner('serial')">
+                                <div class="camera-icon">
+                                  <i class="fas fa-camera"></i>
+                                </div>
+                              </div>
+                            </div> -->
+                            <div class="input-group inv_adj_status_list">
+                              <select ng-model="negativeAdj.serialNO" class="form-control" ng-change="scanSerialItem(negativeAdj.serialNO)" ng-options="option.invNoText as option.invNoText for option in invBalance.inventoryDetail">
+                                <option value="" disabled>Select</option>
+                              </select>
+                              <input ng-model="negativeAdj.serialNO" type="text" class="form-control custom-select-width" ng-blur="scanSerialItem(negativeAdj.serialNO)" placeholder="Scan Serial Number" id="scanInvOrUpc" \>                    
+                              <div class="input-group-append" ng-click="openScanner('serial')">
+                                <div class="camera-icon">
+                                  <i class="fas fa-camera"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
+                          <div class="inv_Adj_binlist">
+                            <!-- <div class="input-group inv_adj_status_list">
+                              <input type="text" ng-model="negativeAdj.lotNO" class="form-control" ng-blur="scanLotItem('negativelot')" placeholder="Scan lot Number" id="scanInvOrUpc" ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
+                              <div class="input-group-append" ng-click="openScanner('lot')">
+                                <div class="camera-icon">
+                                  <i class="fas fa-camera"></i>
+                                </div>
+                              </div>
+                            </div> -->
+                            <div class="input-group inv_adj_status_list">
+                              <select ng-model="negativeAdj.lotNO" class="form-control" ng-change="scanLotItem('negativelot')" ng-options="option.invNoText as option.invNoText for option in invBalance.inventoryDetail">
+                                <option value="" disabled>Select</option>
+                              </select>
+                              <input ng-model="negativeAdj.lotNO" type="text" class="form-control custom-select-width" ng-blur="scanLotItem('negativelot')" placeholder="Scan Lot Number" id="scanInvOrUpc" \>                    
+                              <div class="input-group-append" ng-click="openScanner('lot')">
+                                <div class="camera-icon">
+                                  <i class="fas fa-camera"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="setUpData['useBins'] == true &&  itemData['isBinItem'] == true &&  itemData['isSerialItem'] == false">
+                          <div class="inv_adj_status_list">
+                            <select ng-model="negativeAdj.binNO" ng-change="selectNegBin()" class="form-control" ng-options="option.binNo as option.binNoText for option in negativeBins" id="selectBin" >
+                              <option value="" disabled >Select Bin</option>
+                            </select>
+                          </div>
+                        </div> -->
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="setUpData['useBins'] == true &&  itemData['isBinItem'] == true &&  itemData['isSerialItem'] == false">
+                          <div class="input-group inv_adj_status_list">
+                            <select ng-model="negativeAdj.binNO" ng-change="selectNegBin()" class="form-control"  ng-options="option.binNo as option.binNoText for option in negativeBins" id="selectBin" >
+                              <option value="" disabled>Select Bin</option>
+                            </select>
+                            <div class="input-group-append" ng-click="openScanner('bin')">
+                              <div class="camera-icon">
+                                <i class="fas fa-camera"></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-6 grid-padding" ng-if="setUpData['useInvStatus'] == true &&  itemData['isSerialItem'] == false">
+                          <div class="inv_adj_status_list">
+                            <select ng-model="negativeAdj.selectedStatus" ng-change="selectNegStatus()" class="form-control" ng-options="option.invStatusId as option.invStatus for option in negativeStatus" id="selectStatus">
+                              <option value="" disabled >Select Status</option>
+                            </select>
+                          </div>
+                        </div>
+                        <!-- <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding" ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true"><div class="inv_adj_serial_qty"><span><input type="date" ng-model="negativeAdj.date" class="form-control"></span></div></div> -->
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="itemData['isSerialItem'] == false">
+                          
+                          <div class="inv_adj_serial_qty">
+                            <span>
+                              <input type="text" ng-model="negativeAdj.avlqty" ng-disabled="true" class="form-control" placeholder="Avl Qty">
+                            </span>
+                          </div>
+                        </div>
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 col-6 grid-padding" ng-if="itemData['isSerialItem'] == false">
+                          <div class="inv_adj_serial_qty">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <button ng-click="decrement()" class="btn btn-qty">-</button>
+                              </div>
+                              <input type="number" ng-model="negativeAdj.qty" name="myInput" ng-change="enterQuantity()" ng-disabled="disableQty" placeholder="Quantity" class="form-control adj-qty" id="qty" />
+                              <div class="input-group-append">
+                                <button ng-click="increment()" class="btn btn-qty">+</button>
+                              </div>
+                          </div>
+                      </div>
+                          <!-- <div class="inv_adj_serial_qty">
+                            <span>
+                              <input type="text" ng-model="negativeAdj.qty" ng-change="enterQuantity()" class="form-control" placeholder="Quantity" id="qty">
+                            </span>
+                          </div> -->
+                        </div>
+                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding add-button" ng-if="itemData['isSerialItem'] == false">
+                          <button type="button" class="btn btn-add-details" ng-click="addNegConfiguredItem()">Add Details</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="inv_adj_popup_detail">
+                      <div class="row justify-content-between">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2" ng-repeat="item in configuredItems">
+                          <div class="card p-2">
+                            <div class="checkbox-wrapper">
+                              <i class="fa fa-trash" aria-hidden="true" ng-click="deleteConfiguredItem($index)"></i>
+                            </div>
+                            <table>
+                              <tbody>
+                                <tr ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
+                                  <td class="card-td1">
+                                    <b>Lot Number</b>
+                                  </td>
+                                  <td class="card-td2">:</td>
+                                  <td class="card-td3">{{item.lotNO}}</td>
+                                </tr>
+                                <tr ng-if="setUpData['useSerial'] == true && itemData['isSerialItem'] == true">
+                                  <td class="card-td1">
+                                    <b>Serial Number</b>
+                                  </td>
+                                  <td class="card-td2">:</td>
+                                  <td class="card-td3">{{item.serialNO}}</td>
+                                </tr>
+                                <tr ng-if="setUpData['useBins'] == true &&  itemData['isBinItem'] == true">
+                                  <td class="card-td1">
+                                    <b>Bin Number</b>
+                                  </td>
+                                  <td class="card-td2">:</td>
+                                  <td class="card-td3">{{item.binNoText}}</td>
+                                </tr>
+                                <tr ng-if="setUpData['useInvStatus'] == true">
+                                  <td class="card-td1">
+                                    <b>Status</b>
+                                  </td>
+                                  <td class="card-td2">:</td>
+                                  <td class="card-td3">{{item.selectedStatusText}}</td>
+                                </tr>
+                                <tr>
+                                  <td class="card-td1">
+                                    <b>Quantity</b>
+                                  </td>
+                                  <td class="card-td2">:</td>
+                                  <td class="card-td3">{{item.qty}}</td>
+                                </tr>
+                                <tr ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true && isPositive == true">
+                                  <td class="card-td1">
+                                    <b>Exp Date</b>
+                                  </td>
+                                  <td class="card-td2">:</td>
+                                  <td class="card-td3">{{item.dateText}}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Inventory Adjustment Popup ends-->
+      </div>
+    </div>
+    <!--nswms_main_body ends-->
+  </body>
+</html>

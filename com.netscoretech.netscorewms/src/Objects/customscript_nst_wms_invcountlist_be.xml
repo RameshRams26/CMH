@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_nst_wms_invcountlist_be">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>NST | WMS | V3 |  InvCount List BE</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteApps/com.netscoretech.netscorewms/NSWMS V3 Inv CountList/NST_SWMS_SL_InvCountList_BE.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_nst_wms_invcountlist_be">
+      <allemployees>T</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>T</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>T</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole>ADMINISTRATOR</runasrole>
+      <status>RELEASED</status>
+      <title>NST | WMS | V3 |  InvCount List BE</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

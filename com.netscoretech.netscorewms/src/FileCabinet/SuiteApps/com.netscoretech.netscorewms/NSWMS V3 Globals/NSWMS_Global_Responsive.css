@@ -1,0 +1,370 @@
+@media only screen and (min-width: 1024px) {
+  .nswms_main_header {
+    z-index: 111;
+    background: #000000;
+    position: fixed;
+    width: 100%;
+    float: left;
+    box-shadow: 1px 1px 5px darkgray;
+    color: #fff;
+    display: flex;
+    padding: 20px 20px 20px 20px;
+  }
+  .input-group .input-group-append .camera-icon {
+    height: 36px;
+  }
+  .input-group .form-control {
+    height: 36px;
+  }
+
+  .nswms_main_header .fa {
+    cursor: pointer;
+    font-size: 20px;
+  }
+  .btn-qty {
+    background-color: #bd3b3b;
+    color: #fff;
+    padding: 8px 10px 4px 10px !important;
+  }
+  .search-item-dropdown {
+    width: 273px;
+  }
+  #exampleModal .modal-content {
+    height: 88vh;
+    margin-top: 60px !important;
+  }
+  #itemDataModal .modal-content {
+    height: 88vh;
+    margin-top: 60px !important;
+  }
+  .footer-desktop {
+    padding: 10px !important;
+    background-color: #bd3b3b !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+  }
+  .cam-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #000000b8;
+  }
+  .itemname-mobile {
+    display: none;
+  }
+  .btn-qty {
+    background-color: #bd3b3b;
+    color: #fff;
+    padding: 8px 10px 4px 10px !important;
+  }
+  .loader img {
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    top: 36%;
+    left: 47%;
+  }
+  .inv_adj_item_data {
+    position: relative;
+    left: 10px;
+    font-size: 17px;
+    width: 80%;
+  }
+  footer {
+    position: fixed;
+    left: 0;
+    bottom: 0px;
+    text-align: center;
+    width: 100%;
+    height: 40px;
+  }
+  .input_fields input {
+    line-height: 22px !important;
+  }
+  .input_fields select {
+    line-height: 22px !important;
+  }
+  .picklist_select select {
+    padding: 8px 0 8px 0 !important;
+  }
+  .pickup_main_card {
+    max-height: 55vh;
+  }
+}
+
+@media (max-width: 767px) {
+  .nswms_main_header {
+    z-index: 111;
+    background: #ce3338;
+    position: fixed;
+    width: 100%;
+    float: left;
+    box-shadow: 1px 1px 5px darkgray;
+    color: #fff;
+    display: flex;
+    height: 46px;
+    padding: 10px 20px 0px 20px;
+  }
+  .nswms_main_header .fa {
+    cursor: pointer;
+    font-size: 20px;
+  }
+  .input-group .input-group-append .camera-icon {
+    height: 33px;
+  }
+  .input-group .form-control {
+    height: 33px;
+  }
+  .form-control {
+    padding: 5px 0px 5px 7px !important;
+    font-size: 12px !important;
+  }
+  .input_fields select {
+    line-height: 21px !important;
+  }
+  .btn-qty {
+    background-color: #bd3b3b;
+    color: #fff;
+    padding: 0px 10px 4px 10px !important;
+  }
+  .itemname-desktop {
+    display: none;
+  }
+  .card {
+    font-size: 13px;
+    line-height: 14px;
+  }
+  .item-card td {
+    padding-right: 20px !important;
+    font-size: 10px;
+  }
+  .item_data h6 {
+    font-size: 13px;
+  }
+  .modal-dialog {
+    max-width: 700px !important;
+  }
+  #exampleModal .modal-content {
+    height: 97vh;
+    margin-top: 0px !important;
+    z-index: 9999999;
+  }
+  #itemDataModal .modal-content {
+    height: 97vh;
+    margin-top: 0px !important;
+    z-index: 9999999;
+  }
+
+  .pickup_main_card {
+    padding: 0 0 50px 0;
+  }
+  /* footer {
+    position: fixed;
+    left: 0;
+    bottom: 0px;
+    text-align: center;
+    width: 100%;
+    height: 40px;
+    background-color: #b42429 !important;
+    color: white;
+    text-transform: uppercase;
+    padding: 7px;
+  } */
+
+  .button {
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    position: fixed;
+    left: 0;
+    bottom: 0px;
+    text-align: center;
+    width: 100%;
+    height: 40px;
+    background-color: #ce3338 !important;
+    color: white;
+    text-transform: uppercase;
+    padding: 7px;
+  }
+  .button:after {
+    content: "";
+    background: #a15d5f;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.4s;
+  }
+
+  .button:active:after {
+    opacity: 1;
+    right: 0;
+    transition: 0s;
+  }
+
+  footer .btn-danger {
+    background-color: #b42429 !important;
+    outline: none !important;
+    border: none !important;
+    text-transform: uppercase !important;
+  }
+  .add-button {
+    text-align: center;
+  }
+
+  .inv_adj_item_data {
+    position: relative;
+    left: 10px;
+    font-size: 14px;
+    width: 80%;
+  }
+}
+
+.loader-wrapper {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black overlay */
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+  .nswms_main_header {
+    z-index: 111;
+    background: #ce3338;
+    position: fixed;
+    width: 100%;
+    float: left;
+    box-shadow: 1px 1px 5px darkgray;
+    color: #fff;
+    display: flex;
+    padding: 13px 20px 13px 20px;
+  }
+  .itemname-mobile {
+    display: none;
+  }
+  .input-group .input-group-append .camera-icon {
+    height: 36px;
+  }
+  .input-group .form-control {
+    height: 36px;
+  }
+  .btn-qty {
+    background-color: #bd3b3b;
+    color: #fff;
+    padding: 8px 10px 4px 10px !important;
+  }
+  .loader img {
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    top: 36%;
+    left: 47%;
+  }
+  .cam-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #000000b8;
+  }
+  #exampleModal .modal-content {
+    height: 83vh;
+    margin-top: 65px !important;
+  }
+  #itemDataModal .modal-content {
+    height: 83vh;
+    margin-top: 65px !important;
+  }
+
+  .inv_adj_item_data {
+    position: relative;
+    left: 10px;
+    font-size: 14px;
+    width: 80%;
+  }
+  footer {
+    position: fixed;
+    left: 0;
+    bottom: 0px;
+    text-align: center;
+    width: 100%;
+    height: 40px;
+    background-color: #b42429 !important;
+    color: white;
+    text-transform: uppercase;
+    padding: 7px;
+  }
+  footer .btn-danger {
+    background-color: #b42429 !important;
+    outline: none !important;
+    border: none !important;
+    text-transform: uppercase !important;
+  }
+}
+@media only screen and (min-width: 50px) and (max-width: 767px) {
+  .loader img {
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    top: 36%;
+    left: 38%;
+  }
+  .header_center_logo h4 {
+    font-size: 14px;
+  }
+  .nswms_main_body {
+    position: relative !important;
+    top: 55px !important;
+  }
+  .ns_input-left .form-control {
+    width: 100% !important;
+  }
+  .search-icon {
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    color: #000000b8;
+  }
+  .cam-icon {
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    color: #000000b8;
+  }
+  /* item lookup popup card */
+  #exampleModal .card {
+    line-height: 13px !important;
+  }
+
+  /*pick list starts here*/
+  /* pickup responsive starts */
+  .picklist_select select {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .picklist_date label {
+    font-size: 12px;
+  }
+
+  .picklist_date input {
+    width: 105px;
+    font-size: 12px;
+  }
+
+  .picklist_date span {
+    margin: 0px 5px;
+  }
+
+  .picklist_date .btn {
+    font-size: 10px;
+  }
+  /*pick list ends here*/
+}

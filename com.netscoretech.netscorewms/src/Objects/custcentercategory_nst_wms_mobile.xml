@@ -1,0 +1,19 @@
+<centercategory scriptid="custcentercategory_nst_wms_mobile">
+  <center>BASIC</center>
+  <centertab>[scriptid=custcentertab_nst_wms_v3_wms_mobile]</centertab>
+  <label>NST WMS Mobile</label>
+  <links>
+    <link>
+      <linklabel></linklabel>
+      <linkobject>[scriptid=custlink_nst_wms_login]</linkobject>
+      <linktasktype>LINK</linktasktype>
+      <shortlist>F</shortlist>
+    </link>
+    <link>
+      <linklabel></linklabel>
+      <linkobject>[scriptid=custlink_nst_wms_setup]</linkobject>
+      <linktasktype>LINK</linktasktype>
+      <shortlist>F</shortlist>
+    </link>
+  </links>
+</centercategory>

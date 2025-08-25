@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_nst_wms_receiveto_be">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>NST | WMS | V3 | Receive TO BE</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteApps/com.netscoretech.netscorewms/NSWMS V3 Receive TO/NST_SWMS_SL_ReceiveTO_BE.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_nst_wms_receiveto_be">
+      <allemployees>T</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>T</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>T</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole>ADMINISTRATOR</runasrole>
+      <status>RELEASED</status>
+      <title>NST | WMS | V3 | Receive TO BE</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

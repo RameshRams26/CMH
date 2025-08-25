@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_nst_wms_printlabel_page">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>NST | WMS | V3 | Print Label Page</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteApps/com.netscoretech.netscorewms/NSWMS V3 Printing Labels/NST_SWMS_SL_PrintingLabel_UI.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_nst_wms_printlabel_page">
+      <allemployees>T</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>T</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>T</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole>ADMINISTRATOR</runasrole>
+      <status>RELEASED</status>
+      <title>NST | WMS | V3 | Print Label Page</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

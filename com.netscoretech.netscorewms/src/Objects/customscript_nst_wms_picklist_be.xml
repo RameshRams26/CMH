@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_nst_wms_picklist_be">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>NST | WMS | V3 | PickList BE</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteApps/com.netscoretech.netscorewms/NSWMS V3 PickList/NST_SWMS_PickList_BE.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_nst_wms_picklist_be">
+      <allemployees>T</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>T</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>T</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole>ADMINISTRATOR</runasrole>
+      <status>RELEASED</status>
+      <title>nst_wms_SL_PickList_BE</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

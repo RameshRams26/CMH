@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="customCss" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="customJs"></script>
+    <script id="myDataObj">
+      dataObj
+    </script>
+  </head>
+  <body ng-app="myApp" ng-controller="DashboardController">
+    <div ng-show="loading" class="loader loader-wrapper">
+      <img src="loaderUrl" />
+    </div>
+    <div class="container-fluid main-bg">
+      <header class="">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 col-12" style="text-align: center;">
+              <div class="logo">
+                <span>
+                  <img src="https://8207906-sb1.app.netsuite.com/c.8207906_SB1/suiteapp/com.netscoretech.netscorewms/NSWMS V3 Images/nswms_logo_white.png" class="img-fluid" alt="...">
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-6">
+              <div class="select-location">
+                <select ng-model="location" class="form-select" aria-label="Default select example" ng-options="option.id as option.name for option in locationList">
+                  <option value="" disabled selected>Select Location</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6 col-6 rounded-circle">
+              <!-- <div class="print-icons "><img src="print1" style="display: none;"><img src="print2"><img src="{{empData.empimage}}" alt="mdo" width="32" height="32" class="rounded-circle"></div> -->
+              <div class="navbar">
+                <div class="profile-icon">
+                  <div class="flex-shrink-0 dropdown d-flex flex-row ">
+                    <div class="user-name text-white">
+                      <p>Welcome</p>
+                      <p>
+                        <b>{{empData.empName}}</b>
+                      </p>
+                    </div>
+                    <div class="flex-shrink-0 dropdown">
+                      <a href="#" class="d-block  text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{empData.empimage}}" alt="mdo" width="32" height="32" class="rounded-circle">
+                        <span class="verticla-dots"></span>
+                      </a>
+                      <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2" data-bs-popper style="right: 0 !important;left: inherit;
+             ">
+                        <a class="dropdown-item" href="#" ng-click="connectPrinter()">
+                          <i class="fa fa-print"></i> Connect Printer </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="#" ng-click="printerSettings()">
+                            <i class="fa fa-clone"></i> Set Label Size </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" ng-click="openScreen('changepin')">
+                            <i class="fa fa-lock" aria-hidden="true"></i> Change PIN </a>
+                        </li>
+                        <hr class="dropdown-divider">
+                        <li>
+                          <a class="dropdown-item" href="#" ng-click="openScreen('Login')">
+                            <i class="fa fa-power-off"></i> Sign out </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!--image section starts here-->
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Inventory Lookup')">
+            <a href="#" ng-click="openScreen('invLookUp')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="InvLookup">
+                  <h4>Inventory Lookup</h4>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4"  ng-if="eFeatures.includes('Adjust Qty') && lFeatures.includes('Adjust Quantity')">
+            <a href="#" ng-click="openScreen('invAdj')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="AdjQty">
+                </div>
+                <h4>Adjust Quantity</h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Pick List') && lFeatures.includes('Pick List') ">
+            <a href="#" ng-click="openScreen('pickList')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="PickList">
+                </div>
+                <h4>Pick List</h4>
+              </div>
+            </a>
+          </div>
+           <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Ship Order') && lFeatures.includes('Pick Order')">
+            <a href="#" ng-click="openScreen('shiporder')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="ShipOrder">
+                </div>
+                <h4> Pick Order</h4>
+              </div>
+            </a>
+          </div>
+            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Pack List') && lFeatures.includes('Pack List')">
+            <a href="#" ng-click="openScreen('packList')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="PackList">
+                </div>
+                <h4>Pack List</h4>
+              </div>
+            </a>
+          </div>
+        
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Pack Order') && lFeatures.includes('Pack Order')">
+            <a href="#" ng-click="openScreen('packorder')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="PackOrder">
+                </div>
+                <h4>Pack Order</h4>
+              </div>
+            </a>
+          </div>
+         
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Ship Transfer Order') && lFeatures.includes('Ship Transfer Order')">
+            <a href="#" ng-click="openScreen('shiptransferorder')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="ShipTransferOrder">
+                </div>
+                <h4>Ship Transfer Order</h4>
+              </div>
+            </a>
+          </div>
+       
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Receive List') && lFeatures.includes('Receive List')">
+            <a href="#" ng-click="openScreen('receivelist')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="ReceiveList">
+                </div>
+                <h4>Receive List</h4>
+                
+              </div>
+            </a>
+          </div>
+          <!-- <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Pack Order')">
+            <a href="#">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="AssignOrderToPicker">
+                </div>
+                <h4>Assign Order to Picker</h4>
+              </div>
+            </a>
+          </div> -->
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Create BinPutAway') && lFeatures.includes('Create BinPutAway') && setUpData.useBins == true">
+            <a href="#" ng-click="openScreen('binputaway')">
+              <div class="card zoom"> 
+                <div class="module_image">
+                  <img src="Bin_PutAway">
+                </div>
+                <h4>Create Bin PutAway</h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Create Bin Transfer') && lFeatures.includes('Create Bin Transfer') && setUpData.useBins == true">
+            <a href="#" ng-click="openScreen('bintransfer')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="BinTransfer">
+                  <h4>Create Bin Transfer</h4>
+                  
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Create Inventory Transfer') && lFeatures.includes('Create Inventory Transfer')">
+            <a href="#" ng-click="openScreen('invtransfer')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="InvTransfer">
+                </div>
+                <h4>Create Inventory Transfer</h4>
+              </div>
+            </a>
+          </div>
+      <!--     <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Pack Order')">
+            <a href="#">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="PrintLabels">
+                </div>
+                <h4>Print Labels</h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Pack Order')">
+            <a href="#">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="ReAssignOrders">
+                </div>
+                <h4>Re Assign Order</h4>
+              </div>
+            </a>
+          </div> -->
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Receive RMA') && lFeatures.includes('Receive RMA')">
+            <a href="#" ng-click="openScreen('receiverma')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="ReceiveRMA">
+                </div>
+                <h4>Receive RMA</h4>  
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Receive Inbound Shipmentsr') && lFeatures.includes('Receive Inbound Shipmentsr')">
+            <a href="#">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="ReceiveIBS">
+                </div>
+                <h4>Receive IBS</h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Receive Order') && lFeatures.includes('Receive Order')">
+            <a href="#" ng-click="openScreen('receiveorder')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="ReceiveOrder">
+                </div>
+                <h4>Receive Order</h4>
+                
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Stage Bin Transfer') && lFeatures.includes('Stage Bin Transfer') && setUpData.useStageBins == true">
+            <a href="#" ng-click="openScreen('cartputaway')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="StageTransfer">
+                </div>
+                <h4>Stage Bin Transfer</h4>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Receive Transfer Order') && lFeatures.includes('Receive Transfer Order')">
+            <a href="#" ng-click="openScreen('receiveto')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="ReceiveTransferOrder">
+                </div>
+                <h4>Receive Transfer Order</h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Create Inventory Count Record') && lFeatures.includes('Create Inventory Count Record')">
+            <a href="#" ng-click="openScreen('createcountrecord')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="CreateCount">
+                </div>
+                <h4>Create Count Record</h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Inventory Count List') && lFeatures.includes('Inventory Count List')">
+            <a href="#" ng-click="openScreen('invcountlist')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="CountList">
+                </div>
+                <h4>Inventory Count List</h4>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('configure Count Record') && lFeatures.includes('configure Count Record')">
+            <a href="#" ng-click="openScreen('configurecountrecord')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="ReceiveTransferOrder">
+                </div>
+                <h4>Configure Count Record</h4>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Inbound Shipments') && lFeatures.includes('Inbound Shipments')">
+            <a href="#" ng-click="openScreen('inboundshipments')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="inbound1">
+                </div>
+                <h4>Inbound Shipments</h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Inbound Receive') && lFeatures.includes('Inbound Receive')">
+            <a href="#" ng-click="openScreen('inboundreceive')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="ReceiveTransferOrder">
+                </div>
+                <h4>Inbound Receive</h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Cart PutAway') && lFeatures.includes('Cart PutAway')">
+            <a href="#" ng-click="openScreen('cartputaway')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="Cart_PutAway">
+                </div>
+                <h4>Cart Put Away</h4>
+              </div>
+            </a>
+          </div>
+          <!-- <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('bincount') && lFeatures.includes('bincount')"> -->
+            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="setUpData.useBins == true">
+            <a href="#" ng-click="openScreen('bincount')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="BinCount">
+                </div>
+                <h4>Bin Count</h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Inv Status Change')">
+            <a href="#" ng-click="openScreen('invstatuschange')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="invStatusChange">
+                </div>
+                <h4>Inv Status Change</h4>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Batch List')">
+            <a href="#" ng-click="openScreen('batchlist')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="CountList1">
+                </div>
+                <h4>Batch List</h4>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

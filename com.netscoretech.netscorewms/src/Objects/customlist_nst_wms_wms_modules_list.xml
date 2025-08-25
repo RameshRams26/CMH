@@ -1,0 +1,89 @@
+<customlist scriptid="customlist_nst_wms_wms_modules_list">
+  <description></description>
+  <isinactive>F</isinactive>
+  <ismatrixoption>F</ismatrixoption>
+  <isordered>T</isordered>
+  <name>NST|SWMS| V3|WMS Modules List</name>
+  <customvalues>
+    <customvalue scriptid="val_94442_t1381315_863">
+      <abbreviation>I</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Inventory Lookup</value>
+    </customvalue>
+    <customvalue scriptid="val_94443_t1381315_310">
+      <abbreviation>I</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Inventory Adjustments</value>
+    </customvalue>
+    <customvalue scriptid="val_94444_t1381315_246">
+      <abbreviation>P</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Pick List</value>
+    </customvalue>
+    <customvalue scriptid="val_94446_t1381315_389">
+      <abbreviation>S</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Ship Order</value>
+    </customvalue>
+    <customvalue scriptid="val_94447_t1381315_148">
+      <abbreviation>P</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Pack List</value>
+    </customvalue>
+    <customvalue scriptid="val_94448_t1381315_127">
+      <abbreviation>P</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Pack/Ship Order</value>
+    </customvalue>
+    <customvalue scriptid="val_94449_t1381315_820">
+      <abbreviation>R</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Receive List</value>
+    </customvalue>
+    <customvalue scriptid="val_94450_t1381315_227">
+      <abbreviation>R</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Receive Order</value>
+    </customvalue>
+    <customvalue scriptid="val_94451_t1381315_125">
+      <abbreviation>B</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Bin PutAway</value>
+    </customvalue>
+    <customvalue scriptid="val_94452_t1381315_425">
+      <abbreviation>B</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Bin Transfer</value>
+    </customvalue>
+    <customvalue scriptid="val_94453_t1381315_478">
+      <abbreviation>S</abbreviation>
+      <isinactive>F</isinactive>
+      <value>Stage Bin Transfer</value>
+    </customvalue>
+    <customvalue scriptid="val_96055_t1381315_332">
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+      <value>Ship Transfer Order</value>
+    </customvalue>
+    <customvalue scriptid="val_99994_t1381315_846">
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+      <value>Inventory Transfer</value>
+    </customvalue>
+    <customvalue scriptid="val_100070_t1381315_439">
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+      <value>Inventory Count</value>
+    </customvalue>
+    <customvalue scriptid="val_100722_t1381315_463">
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+      <value>Configure Count Record</value>
+    </customvalue>
+    <customvalue scriptid="val_100831_t1381315_344">
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+      <value>Receive Transefer order</value>
+    </customvalue>
+  </customvalues>
+</customlist>

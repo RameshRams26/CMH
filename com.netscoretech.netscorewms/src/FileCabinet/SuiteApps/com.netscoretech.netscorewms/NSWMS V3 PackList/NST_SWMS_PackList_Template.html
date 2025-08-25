@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pack List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="customCss" />
+    <link rel="stylesheet" href="responsiveCss" />
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="customJs"></script>
+    <script id="myDataObj">dataObj</script>
+  </head>
+  <body ng-app="myApp" ng-controller="PackListController">
+    <div ng-show="loading" class="loader loader-wrapper">
+      <img src="loaderUrl" />
+    </div>
+    <!--nswms_main_header starts-->
+    <div class="nswms_main_header d-flex justify-content-between align-items-center">
+      <div class="header_left">
+        <span ng-click="goBack()">
+          <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="header_center_logo">
+        <h4>Pack List</h4>
+      </div>
+      <div class="header_right">
+        <span ng-click="logOut()">
+          <i class="fa fa-power-off" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+    <!--nswms_main_header ends-->
+ <!--nswms_main_body starts-->
+ <div class="nswms_main_body">
+    <div class="container">
+      <div class="inv_adj_fields mb-2">
+        <div class="row d-flex justify-content-between">
+          <div class="col-md-4 col-sm-6 col-6 col-xs-6">
+              <p class="fw-bolder mb-1">
+                <i class="fa fa-map-marker" aria-hidden="true" style="color:#bd3b3b;"></i><span class="fw-normal"> {{locObj.name}}</span>
+            </p>
+          </div>
+          </div>
+      </div>
+
+
+      <div class="input_fields mb-2">
+        <div class="row justify-content-between">
+          <div class="picklist_select col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
+            <select ng-model="transactionlist" ng-change="selectTransaction()" class="select-control" id="transactionlist">
+              <option value = "">Select Transaction Type </option>
+              <option value ="salesorder">SO</option>
+              <option value ="transferorder">TO</option>
+            </select>
+          </div>
+          <div class="col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
+            <div class="input-group inv_adj_status_list">
+              <input type="text" ng-model="scannedOrder" ng-blur="scanOrder(scannedOrder)" class="form-control" placeholder="Scan Sale Order" id="scanitem" />
+			        <div class="input-group-append" ng-click="openScanner()">
+                <div class="camera-icon">
+                  <i class="fas fa-camera"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <div class="row">
+      <div class="col-md-4 col-sm-6 col-6 col-xs-6"></div>
+        <div class="picklist_date mb-2 d-flex justify-content-center">
+          <span class="fw-bolder">
+            <label for="html">From : </label><br>
+            <input type="date" placeholder="From Date" id="fromdate"ng-model="fromDate"/>
+          </span>
+      
+        <span class="fw-bolder">
+          <label for="html">To : </label><br>
+          <input type="date" placeholder="To Date" id="todate" ng-model="toDate"/>
+        </span>
+     
+        <span class="pickup_search_btn" ng-click="searchbydate()">
+          <button class="btn btn-danger">Search</button>
+        </span>
+      </div>
+      </div>
+   
+
+    <div class="pickup_main_card mt-1">
+      <div class="row justify-content-between item-lookup-details">
+        <div class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2" ng-repeat="orders in listObj" >
+          <!-- | orderBy:['tranDate', 'orderNo'] -->
+            <div class="card p-2" ng-click="cardclick(orders)">
+			<div class="checkbox-wrapper">
+			 <td><input class="print-checkbox" type="radio" name="selectedResults" ng-model="$parent.selectedResult" ng-value="orders" > </td>
+			 </div>
+              <table>
+                <tr>
+                 <td class="card-td1"><b>Shipment Number</b></td>
+                  <td class="card-td2">:</td>
+                  <td class="card-td3">{{orders.orderNo}}</td>
+                  <!-- <td class="print-checkbox"><input type="checkbox"></td> -->
+				         </tr>
+                <tr ng-if="orders.recordType == 'salesorder'">
+                  <td class="card-td1"><b>Sales Order</b></td>
+                  <td class="card-td2">:</td>
+                  <td class="card-td3">{{orders.createdFrom}}</td>
+                </tr>
+                <tr ng-if="orders.recordType == 'transferorder'">
+                  <td class="card-td1"><b>Transfer Order</b></td>
+                  <td class="card-td2">:</td>
+                  <td class="card-td3">{{orders.createdFrom}}</td>
+                </tr>
+                <tr style="display: none;">
+                  <td class="card-td1"> <b>order type</b></td>
+                  <td class="card-td2">:</td>
+                  <td class="card-td3">{{orders.recordType}}</td>
+                </tr>
+                <tr>
+                  <td class="card-td1"> <b>Date</b></td>
+                  <td class="card-td2">:</td>
+                  <td class="card-td3">{{orders.tranDates}}</td>
+                </tr>
+                <!-- <tr>
+                  <td class="card-td1"> <b>DateString</b></td>
+                  <td class="card-td2">:</td>
+                  <td class="card-td3">{{ orders.parsedDate }}</td>
+                </tr> -->
+
+            </table>
+              </div>
+            </div>
+                    
+      </div>
+   
+    </div>
+    <footer class="inv_adj_footer button " ng-click="packItems()">        
+      <span class="footer-desktop"  >Pack</span>         
+  </footer>
+    </div>
+</div>
+</div>
+<!--nswms_main_body ends-->
+    </body>
+    </html>
