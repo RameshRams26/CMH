@@ -40,13 +40,13 @@ body {
 }
 
 .btn-login:hover {
-  background: linear-gradient(to right, #99201c, #f56545);
+  background: linear-gradient(to right, #222c69, #3fb777);
   color: #fff;
   outline: none;
 }
 
 .btn-login {
-  background: linear-gradient(to right, #f56545, #99201c);
+  background: linear-gradient(to right, #3fb777, #222c69);
   color: #fff;
   outline: none;
   padding: 10px 12px !important;
@@ -84,20 +84,20 @@ body {
   text-align: center;
   margin-top: 15px;
   cursor: pointer;
-  background: linear-gradient(to right, #f56545, #99201c);
+  background: linear-gradient(to right, #222c69, #40b778);
   color: #fff;
   padding: 2px 23px !important;
 }
 
 .title-login h3 {
-  font-weight: 600;
+  font-weight:  600;
 }
 
-.title-login {
+.title-login h3 {
   text-align: center;
   margin-bottom: 10px;
   font-weight: 600;
-  color: #c64445;
+  color: #3fb777;
 }
 .login-pin {
   padding: 0 0 10px 0;
@@ -105,7 +105,7 @@ body {
 
 }
 .otp-input {
-  border: 1px solid #fa493a;
+  border: 1px solid #222c69;
   border-radius: 5px;
   padding: 17px;
   margin: 10px;
@@ -116,7 +116,7 @@ body {
   background: #fff9 !important;
 }
 .otp-input:focus {
-  border-color: #020202;
+  border-color: #45b97b;
 }
 .btn:focus {
   outline: none;
