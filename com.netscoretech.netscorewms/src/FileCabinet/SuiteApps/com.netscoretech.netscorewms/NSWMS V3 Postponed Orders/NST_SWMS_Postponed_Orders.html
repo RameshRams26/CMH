@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <html lang="en" ng-app="postponedApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Postponed Orders</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="customCss" />
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="customJs"></script>
+    <script id="myDataObj">dataObj</script>
+   <style>
+      .loader img {
+        height: 100px;
+        width: 100px;
+        position: absolute;
+        top: 36%;
+        left: 47%;
+      }
+      .loader-wrapper {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); 
+    }
+   </style>
+  </head>
+  <body ng-controller="PostponedCtrl" class="">
+
+<div ng-show="loading" class="loader loader-wrapper">
+      <img src="loaderUrl" />
+    </div>
+    <!--nswms_main_header starts-->
+    <div class="nswms_main_header d-flex justify-content-between align-items-center">
+      <div class="header_left">
+        <span ng-click="goBack()">
+          <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="header_center_logo">
+        <h4>Postponed Orders</h4>
+      </div>
+      <div class="header_right">
+        <span ng-click="logOut()">
+          <i class="fa fa-power-off" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+<body ng-controller="PostponedCtrl" class="container py-4">
+  <div class="container py-3 nswms_main_body">
+    <div class="page-header">
+      <i class="bi bi-box-seam text-primary" style="font-size:1.6rem"></i>
+      <div>
+        <div class="page-title">Picking Flow — Orders → Items → Assign / Next Bin</div>
+        <div class="small-muted">Light theme · Responsive · Exact bins only</div>
+      </div>
+      <div class="ms-auto text-end">
+        <div class="small-muted">Logged in:</div>
+        <div class="fw-semibold">{{vm.loggedInUser}} • <span class="text-primary">{{vm.loggedInLocation.label}}</span></div>
+      </div>
+    </div>
+
+ 
+
+  <!-- 🔍 Filter Bar -->
+  <div class="filter-bar">
+    <div class="row g-2 align-items-center">
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="Search by SO #" ng-model="search.so">
+      </div>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="Search by Client Name" ng-model="search.client">
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" ng-model="search.source">
+          <option value="">Filter by Source</option>
+          <option value="Pickup Operator">Pickup Operator</option>
+          <option value="Driver">Driver</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="row row-cols-1 row-cols-md-3 g-3 mt-3">
+    <div class="col" ng-repeat="order in postponedOrders" ng-show="filterOrders(order)">
+      <div class="order-card">
+        <div class="order-header">SO: {{order.so}} | IF: {{order.if}}</div>
+        <p><strong>Client:</strong> {{order.client}}</p>
+        <p><strong>Type:</strong> {{order.type}}</p>
+        <p><strong>Source:</strong> {{order.source}}</p>
+        <p><strong>Attempt Date:</strong> {{order.attemptDate}}</p>
+        <p>
+          <strong>Status:</strong>
+          <span class="badge-status pending">{{order.status}}</span>
+        </p>
+        <button class="btn btn-primary btn-sm btn-deliver">Deliver</button>
+      </div>
+    </div>
+  </div>
+
+    
+
+  </div>
+
+  
+  
+
+
+    </html>
