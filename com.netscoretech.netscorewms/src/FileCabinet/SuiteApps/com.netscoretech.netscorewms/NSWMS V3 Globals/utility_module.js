@@ -186,21 +186,6 @@ define(['N/search', 'N/url', 'N/record', 'N/runtime', 'N/https'], function (sear
     return urlObj;
   }
 
-  function createRecord(recordType, fields) {
-    var newRecord = record.create({
-      type: recordType,
-      isDynamic: true,
-    });
-    for (var field in fields) {
-      newRecord.setValue({
-        fieldId: field,
-        value: fields[field],
-      });
-    }
-    var recordId = newRecord.save();
-    return recordId;
-  }
-
   function getCurrentUser() {
     var user = runtime.getCurrentUser();
     return {
@@ -428,9 +413,21 @@ define(['N/search', 'N/url', 'N/record', 'N/runtime', 'N/https'], function (sear
         scriptId: 'customscript_nst_wms_picklist_page',
         deploymentId: 'customdeploy_nst_wms_picklist_page',
       },
-      packList: {
+      orderDeliverDashboard: {
         scriptId: 'customscript_nst_wms_packlist_page',
         deploymentId: 'customdeploy_nst_wms_packlist_page',
+      },
+      postponedOrders: {
+        scriptId: 'customscript_nst_wms_postponed_orders_ui',
+        deploymentId: 'customdeploy_nst_wms_postponed_orders_ui',
+      },
+      deliveryEvent: {
+        scriptId: 'customscript_nst_wms_deliver_handling_ui',
+        deploymentId: 'customdeploy_nst_wms_deliver_handling_ui',
+      },
+      assignmentDashboard: {
+        scriptId: 'customscript_nst_wms_assign_dashboard_ui',
+        deploymentId: 'customdeploy_nst_wms_assign_dashboard_ui',
       },
       shiporder: {
         scriptId: 'customscript_nst_wms_shiporder_page',
@@ -605,9 +602,6 @@ define(['N/search', 'N/url', 'N/record', 'N/runtime', 'N/https'], function (sear
       itemObj['displayName'] = result.getValue({ name: 'displayname' });
       itemObj['committed'] = result.getValue({ name: 'quantitycommitted' });
       itemObj['type'] = result.recordType;
-      if (itemObj['type'] == 'kititem') {
-        itemObj.kitMemberArr = getKitItemMembers(itemObj['itemID'], setUpData, locationId);
-      }
 
       var fileId = result.getValue({
         name: 'custitem_nst_wms_lookup_uploaded_image',
@@ -1423,136 +1417,6 @@ define(['N/search', 'N/url', 'N/record', 'N/runtime', 'N/https'], function (sear
     return types;
   }
 
-  function getKitItemMembers(itemId, setUpData, locationId) {
-    var kitMemberArr = [];
-    var kititemSearchObj = search.create({
-      type: 'kititem',
-      filters: [['type', 'anyof', 'Kit'], 'AND', ['internalid', 'anyof', itemId]],
-      columns: [
-        search.createColumn({ name: 'memberitem', label: 'Member Item' }),
-        search.createColumn({
-          name: 'memberquantity',
-          label: 'Member Quantity',
-        }),
-        search.createColumn({
-          name: 'unitstype',
-          join: 'memberItem',
-          label: 'Primary Units Type',
-        }),
-        search.createColumn({
-          name: 'type',
-          join: 'memberItem',
-        }),
-        // search.createColumn({
-        //   name: "locationquantityavailable",
-        //   join: "memberItem",
-        //   label: "Location Available"
-        // }),
-        search.createColumn({
-          name: 'upccode',
-          join: 'memberItem',
-          label: 'UPC Code',
-        }),
-        search.createColumn({
-          name: 'purchasedescription',
-          join: 'memberItem',
-          label: 'Purchase Description',
-        }),
-        search.createColumn({
-          name: 'itemid',
-        }),
-        search.createColumn({
-          name: 'isserialitem',
-          join: 'memberItem',
-          label: 'Is Serialized Item',
-        }),
-        search.createColumn({
-          name: 'islotitem',
-          join: 'memberItem',
-          label: 'Is Lot Numbered Item',
-        }),
-        search.createColumn({
-          name: 'usebins',
-          join: 'memberItem',
-          label: 'Use Bins',
-        }),
-      ],
-    });
-    var searchResultCount = kititemSearchObj.runPaged().count;
-    log.debug('kititemSearchObj result count', searchResultCount);
-    kititemSearchObj.run().each(function (result) {
-      var itemObj = {};
-      itemObj['kitName'] = result.getValue({ name: 'itemid' });
-      itemObj['kitId'] = itemId;
-      itemObj['itemID'] = result.getValue({ name: 'memberitem' });
-      itemObj['itemName'] = result.getText({ name: 'memberitem' });
-      itemObj['memberQty'] = Number(result.getValue({ name: 'memberquantity' }));
-      itemObj['type'] = result.getValue({ name: 'type', join: 'memberItem' });
-      if (setUpData['useUpc'] == true) {
-        itemObj['skuNumber'] = result.getValue({
-          name: 'upccode',
-          join: 'memberItem',
-        });
-      } else {
-        itemObj['upc'] = false;
-      }
-      if (setUpData['useBins'] == true) {
-        itemObj['isBinItem'] = result.getValue({
-          name: 'usebins',
-          join: 'memberItem',
-        });
-      } else {
-        itemObj['isBinItem'] = false;
-      }
-      if (setUpData['useSerial'] == true) {
-        itemObj['isSerialItem'] = result.getValue({
-          name: 'isserialitem',
-          join: 'memberItem',
-        });
-      } else {
-        itemObj['isSerialItem'] = false;
-      }
-      if (setUpData['useLot'] == true) {
-        itemObj['isLotItem'] = result.getValue({
-          name: 'islotitem',
-          join: 'memberItem',
-        });
-      } else {
-        itemObj['isLotItem'] = false;
-      }
-
-      itemObj['configuredItems'] = [];
-      itemObj['kitConfiguredItems'] = {};
-
-      itemObj['invBalance'] = getInventoryBalanceByLocation(
-        setUpData,
-        itemObj['itemID'],
-        locationId,
-        itemObj['isSerialItem'],
-      );
-      itemObj['available'] = result.getValue({
-        name: 'locationquantityavailable',
-        join: 'memberItem',
-        label: 'Location Available',
-      });
-      itemObj['description'] = result.getValue({
-        name: 'purchasedescription',
-        join: 'memberItem',
-        label: 'Purchase Description',
-      });
-      itemObj['unitstype'] = result.getText({
-        name: 'unitstype',
-        join: 'memberItem',
-        label: 'Primary Units Type',
-      });
-      itemObj['component'] = true;
-      itemObj['pickQty'] = 0;
-      kitMemberArr.push(itemObj);
-      return true;
-    });
-    return kitMemberArr;
-  }
-
   function replaceWithZero(variable) {
     return variable || variable === 0 ? variable : 0;
   }
@@ -1612,10 +1476,29 @@ define(['N/search', 'N/url', 'N/record', 'N/runtime', 'N/https'], function (sear
     return itemArray;
   }
 
+  function getList(recordType) {
+    let results = [];
+
+    let mySearch = search.create({
+      type: recordType,
+      filters: [['isinactive', 'is', 'F']],
+      columns: ['name'],
+    });
+
+    mySearch.run().each(function (result) {
+      results.push({
+        id: result.id,
+        name: result.getValue({ name: 'name' }),
+      });
+      return true;
+    });
+
+    return results;
+  }
+
   return {
     searchRecords: searchRecords,
     getFilesInFolder: getFilesInFolder,
-    createRecord: createRecord,
     getCurrentUser: getCurrentUser,
     getSetUpRecordData: getSetUpRecordData,
     validateCredentials: validateCredentials,
@@ -1636,8 +1519,8 @@ define(['N/search', 'N/url', 'N/record', 'N/runtime', 'N/https'], function (sear
     createBackupRecord: createBackupRecord,
     getPreffredBinsForItemsInLocation: getPreffredBinsForItemsInLocation,
     replaceWithZero: replaceWithZero,
-    getKitItemMembers: getKitItemMembers,
     getBackUpRecordData: getBackUpRecordData,
     getStageBinsForLocation: getAllBinsByLocation,
+    getList: getList,
   };
 });
