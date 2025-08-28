@@ -2,13 +2,13 @@
  * @NApiVersion 2.1
  * @NScriptType Suitelet
  */
-define(['N/search', 'N/file', 'N/record', 'N/format', '../NSWMS V3 Globals/utility_module'], (
-  search,
-  file,
-  record,
-  format,
-  utility,
-) => {
+define([
+  "N/search",
+  "N/file",
+  "N/record",
+  "N/format",
+  "../NSWMS V3 Globals/utility_module",
+], (search, file, record, format, utility) => {
   /**
    * Defines the Suitelet script trigger point.
    * @param {Object} scriptContext
@@ -17,26 +17,31 @@ define(['N/search', 'N/file', 'N/record', 'N/format', '../NSWMS V3 Globals/utili
    * @since 2015.2
    */
   const onRequest = (scriptContext) => {
-    if (scriptContext.request.method === 'GET') {
+    if (scriptContext.request.method === "GET") {
       log.debug({
-        title: 'packlistbe',
-        details: 'triggered',
+        title: "packlistbe",
+        details: "triggered",
       });
 
       let params = scriptContext.request.parameters;
       log.debug({
-        title: 'parameters',
+        title: "parameters",
         details: JSON.stringify(params),
       });
 
       let response = {};
 
-      if (params['ref'] == 'getSetUpData') {
-        response['setUpData'] = utility.getSetUpRecordData(params['setUpId']);
-        response['locationObj'] = utility.fieldLookUp('location', params['locationId'], ['name']); //get Location name from SetupRecord
-        let locationId = params['locationId'];
-        let pickedStatusIFs = getPickedStatusIFs(locationId);
-        response['pickedStatusIFs'] = pickedStatusIFs;
+      if (params["ref"] == "getSetUpData") {
+        response["setUpData"] = utility.getSetUpRecordData(params["setUpId"]);
+        response["locationObj"] = utility.fieldLookUp(
+          "location",
+          params["locationId"],
+          ["name"]
+        );
+      }
+      if (params["ref"] == "getOrderDetails") {
+         let pickedStatusIFs = getOrdersForDelivery();
+        response["pickedStatusIFs"] = pickedStatusIFs;
       }
 
       scriptContext.response.write(JSON.stringify(response));
@@ -48,96 +53,150 @@ define(['N/search', 'N/file', 'N/record', 'N/format', '../NSWMS V3 Globals/utili
       console.log(JSON.stringify(response));
       scriptContext.response.write(JSON.stringify(response));
     }
-    //get IFs with picked status
-    function getPickedStatusIFs(locationId) {
+    function getOrdersForDelivery() {
+      let ordersList = []
       try {
-        log.debug({
-          title: 'pickstatustriggered==loc',
-          details: locationId,
-        });
-
-        let pickedIFs = [];
-
-        let itemfulfillmentSearchObj = search.create({
-          type: 'itemfulfillment',
+        var customrecord_nst_wms_v3_picker_assignmenSearchObj = search.create({
+          type: "customrecord_nst_wms_v3_picker_assignmen",
           filters: [
-            ['type', 'anyof', 'ItemShip'],
-            'AND',
-            ['status', 'anyof', 'ItemShip:A', 'ItemShip:B'],
-            'AND',
-            ['location', 'anyof', locationId],
-            'AND',
-            ['mainline', 'is', 'T'],
+            ["isinactive", "is", "F"],
+            "AND",
+            ["custrecord_ns_wms_pia_status", "noneof", "4", "5"],
           ],
           columns: [
-            search.createColumn({ name: 'tranid' }),
-            search.createColumn({ name: 'createdfrom' }),
-            search.createColumn({ name: 'statusref' }),
-            search.createColumn({ name: 'trandate' }),
             search.createColumn({
-              name: 'recordtype',
-              join: 'createdFrom',
-              label: 'Record Type',
+              name: "custrecord_ns_wms_pia_status",
+              label: "Status",
+            }),
+            search.createColumn({
+              name: "custrecord_ns_wms_pia_picker",
+              label: "Assigned Picker",
+            }),
+            search.createColumn({
+              name: "custrecord_ns_wms_pia_item",
+              label: "Item",
+            }),
+            search.createColumn({
+              name: "custrecord_ns_wms_pia_stage_out_bin",
+              label: "Stage Out Bin",
+            }),
+            search.createColumn({
+              name: "custrecord_ns_wms_pia_parent_rec",
+              label: "Assignment Header Link",
+            }),
+            search.createColumn({ name: "name", label: "ID" }),
+            search.createColumn({
+              name: "custrecord_ns_wms_pia_sales_order",
+              label: "Sales Order",
+            }),
+            search.createColumn({
+              name: "custrecord_ns_wms_pia_fulfill_ref",
+              label: "Item Fulfillment",
+            }),
+            search.createColumn({
+              name: "custrecord_ns_wms_pia_picked_qty",
+              label: "Picked Quantity",
+            }),
+            search.createColumn({
+              name: "custrecord_ns_wms_soah_customer",
+              join: "CUSTRECORD_NS_WMS_PIA_PARENT_REC",
+              label: "Customer",
             }),
           ],
         });
+        var searchResultCount =
+          customrecord_nst_wms_v3_picker_assignmenSearchObj.runPaged().count;
+        log.debug(
+          "customrecord_nst_wms_v3_picker_assignmenSearchObj result count",
+          searchResultCount
+        );
+        customrecord_nst_wms_v3_picker_assignmenSearchObj
+          .run()
+          .each(function (result) {
+            var orderObj = {};
+            orderObj.salesOrder = result.getText({
+              name: "custrecord_ns_wms_pia_sales_order",
+              label: "Sales Order",
+            });
+             orderObj.salesOrderId = result.getValue({
+              name: "custrecord_ns_wms_pia_sales_order",
+              label: "Sales Order",
+            });
+            orderObj.customer = result.getText({
+              name: "custrecord_ns_wms_soah_customer",
+              join: "CUSTRECORD_NS_WMS_PIA_PARENT_REC",
+              label: "Customer",
+            });
+            orderObj.itemFulfillment = result.getText({
+              name: "custrecord_ns_wms_pia_fulfill_ref",
+              label: "Item Fulfillment",
+            });
+            orderObj.itemName = result.getText({
+              name: "custrecord_ns_wms_pia_item",
+              label: "Item",
+            });
+            orderObj.itemId = result.getValue({
+              name: "custrecord_ns_wms_pia_item",
+              label: "Item",
+            });
+            orderObj.status = result.getText({
+              name: "custrecord_ns_wms_pia_status",
+              label: "Status",
+            });
+            orderObj.assignedPicker = result.getText({
+              name: "custrecord_ns_wms_pia_picker",
+              label: "Assigned Picker",
+            });
+            orderObj.stageOutBin = result.getText({
+              name: "custrecord_ns_wms_pia_stage_out_bin",
+              label: "Stage Out Bin",
+            });
+            orderObj.assignmentLink = result.getValue({
+              name: "custrecord_ns_wms_pia_parent_rec",
+              label: "Assignment Header Link",
+            });
+            ordersList.push(orderObj)
+            return true;
+          });
+        log.debug("OrdersList", ordersList)
+        const grouped = Object.values(
+          ordersList.reduce((acc, curr) => {
+            const { salesOrder, salesOrderId ,customer, assignmentLink, ...item } = curr;
 
-        let searchResultCount = itemfulfillmentSearchObj.runPaged().count;
-        log.debug({
-          title: 'itemfulfillmentSearchObj result count',
-          details: searchResultCount,
+            if (!acc[salesOrder]) {
+              acc[salesOrder] = {
+                salesOrder,
+                salesOrderId,
+                customer,
+                assignmentLink,
+                items: []
+              };
+            }
+
+            acc[salesOrder].items.push(item);
+
+            return acc;
+          }, {})
+        ).map(order => {
+          const statuses = order.items.map(i => i.status);
+          let status;
+          if (statuses.every(s => s === "Staged")) {
+            status = "Completed";
+          } else if (statuses.every(s => s === "Pending")) {
+            status = "Pending";
+          } else {
+            status = "InProgress";
+          }
+          return {
+            ...order,
+            status
+          };
         });
-        itemfulfillmentSearchObj.run().each(function (result) {
-          let pickStatusIF = {};
-          pickStatusIF['orderNo'] = result.getValue({
-            name: 'tranid',
-          });
-          pickStatusIF['createdFrom'] = result.getText({
-            name: 'createdfrom',
-          });
-          pickStatusIF['IFstatus'] = result.getValue({
-            name: 'statusref',
-          });
-          pickStatusIF['tranDates'] = result.getValue({
-            name: 'trandate',
-          });
-
-          let formateddate = result.getValue({
-            name: 'trandate',
-          });
-
-          let parsedDate = format.parse({
-            value: formateddate,
-            type: format.Type.DATE,
-          });
-          let day = parsedDate.getDate();
-          let month = parsedDate.getMonth() + 1;
-          let year = parsedDate.getFullYear();
-
-          pickStatusIF['tranDate'] = day + '/' + month + '/' + year;
-
-          // let converteddate = formateddate.split("/");
-          // pickStatusIF["tranDate"] =
-          //   converteddate[1] + "/" + converteddate[0] + "/" + converteddate[2];
-
-          log.debug('checkdate', pickStatusIF['tranDate']);
-          pickStatusIF['tranDateString'] = result.getValue({
-            name: 'trandate',
-          });
-          pickStatusIF['recordType'] = result.getValue({
-            name: 'recordtype',
-            join: 'createdFrom',
-            label: 'Record Type',
-          });
-          //let parsedtrandate=new Date(pickStatusIF["tranDate"]);
-          pickedIFs.push(pickStatusIF);
-          return true;
-        });
-
-        return pickedIFs;
+        log.debug("grouped", grouped)
+        return grouped;
       } catch (e) {
-        log.error('error in getPickedStatusIFs ', e);
-        var response = { status: 'error', message: e.message };
+        log.error("error in getOrdersForDelivery ", e);
+        var response = { status: "error", message: e.message };
         return response;
       }
     }

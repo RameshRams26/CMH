@@ -413,9 +413,21 @@ define(['N/search', 'N/url', 'N/record', 'N/runtime', 'N/https'], function (sear
         scriptId: 'customscript_nst_wms_picklist_page',
         deploymentId: 'customdeploy_nst_wms_picklist_page',
       },
-      packList: {
+      orderDeliverDashboard: {
         scriptId: 'customscript_nst_wms_packlist_page',
         deploymentId: 'customdeploy_nst_wms_packlist_page',
+      },
+      postponedOrders: {
+        scriptId: 'customscript_nst_wms_postponed_orders_ui',
+        deploymentId: 'customdeploy_nst_wms_postponed_orders_ui',
+      },
+      deliveryEvent: {
+        scriptId: 'customscript_nst_wms_deliver_handling_ui',
+        deploymentId: 'customdeploy_nst_wms_deliver_handling_ui',
+      },
+      assignmentDashboard: {
+        scriptId: 'customscript_nst_wms_assign_dashboard_ui',
+        deploymentId: 'customdeploy_nst_wms_assign_dashboard_ui',
       },
       shiporder: {
         scriptId: 'customscript_nst_wms_shiporder_page',

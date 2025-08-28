@@ -16,6 +16,8 @@ angular.module('pickApp', []).controller('MainCtrl', [
       { locationId: 'LOC-3', label: 'Floor 1 - Zone B' },
     ];
 
+    $scope.loading = false;
+
     $scope.goBack = function () {
       $window.history.back();
     };

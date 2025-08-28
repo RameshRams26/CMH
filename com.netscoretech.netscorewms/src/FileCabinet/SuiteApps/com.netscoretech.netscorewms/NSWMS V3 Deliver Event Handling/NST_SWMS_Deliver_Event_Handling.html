@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <html lang="en" ng-app="deliverHandlingApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deliver Event Handling</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="customCss" />
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="customJs"></script>
+    <script id="myDataObj">dataObj</script>
+   <style>
+      .loader img {
+        height: 100px;
+        width: 100px;
+        position: absolute;
+        top: 36%;
+        left: 47%;
+      }
+      .loader-wrapper {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); 
+    }
+   </style>
+  </head>
+  <body ng-controller="deliverHandlingCtrl" class="">
+
+<!-- <div ng-show="loading" class="loader loader-wrapper">
+      <img src="loaderUrl" />
+    </div> -->
+    <!--nswms_main_header starts-->
+    <div class="nswms_main_header d-flex justify-content-between align-items-center">
+      <div class="header_left">
+        <span ng-click="goBack()">
+          <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="header_center_logo">
+        <h4>Deliver Event Handling</h4>
+      </div>
+      <div class="header_right">
+        <span ng-click="logOut()">
+          <i class="fa fa-power-off" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+<body ng-controller="PostponedCtrl" class="container py-4">
+  <div class="container py-3 nswms_main_body">
+ 
+  <!-- Step 1: Show Orders -->
+  <div ng-if="!activeOrder">
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+      <div class="col" ng-repeat="order in transfers">
+        <div class="order-card">
+          <div class="order-header">
+            Tracking #: {{order.tracking}}
+          </div>
+          <p><strong>SO:</strong> {{order.so}} | <strong>IF:</strong> {{order.if}}</p>
+          <p><strong>Customer:</strong> {{order.customer}}</p>
+          <button class="btn btn-primary btn-sm btn-action mt-2" ng-click="startOrder(order)">Start</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Show Items -->
+  <div ng-if="activeOrder">
+    <div class="order-card">
+      <div class="order-header">
+        Tracking #: {{activeOrder.tracking}}
+      </div>
+      <p><strong>SO:</strong> {{activeOrder.so}} | <strong>IF:</strong> {{activeOrder.if}}</p>
+      <p><strong>Customer:</strong> {{activeOrder.customer}}</p>
+
+      <div class="item-row" ng-repeat="line in activeOrder.lines">
+        <div class="row align-items-center">
+          <div class="col-md-3"><strong>{{line.item}}</strong></div>
+          <div class="col-md-2">Qty: {{line.qty}}</div>
+          <div class="col-md-2">From: {{line.fromBin}}</div>
+          <div class="col-md-2">To: {{line.toBin || '-'}}</div>
+          <div class="col-md-2">
+            <span ng-class="{
+              'status-badge pending': line.status=='Pending Transfer',
+              'status-badge transferred': line.status=='Transferred'
+            }">{{line.status}}</span>
+          </div>
+          <div class="col-md-1 text-end" ng-if="line.status=='Pending Transfer'">
+            <button class="btn btn-sm btn-outline-primary"
+                    ng-click="openModal(line)">Select</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-secondary btn-sm btn-action mt-3" ng-click="backToOrders()">⬅ Back</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="binModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Scan Target Bin</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Item:</strong> {{selectedLine.item}}</p>
+          <p><strong>Qty:</strong> {{selectedLine.qty}}</p>
+          <p><strong>From Bin:</strong> {{selectedLine.fromBin}}</p>
+          <input type="text" class="form-control" placeholder="Scan/Enter Target Bin"
+                 ng-model="selectedLine.targetBin">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success btn-action" ng-click="submitTransfer()">Submit</button>
+          <button class="btn btn-secondary btn-action" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+
+    
+
+  </div>
+
+  
+  
+
+
+    </html>
