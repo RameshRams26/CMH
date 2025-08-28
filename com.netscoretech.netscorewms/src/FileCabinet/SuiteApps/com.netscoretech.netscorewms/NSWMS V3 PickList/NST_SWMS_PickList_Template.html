@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+  <html lang="en" ng-app="pickApp">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,17 +9,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="customCss" />
-    <link rel="stylesheet" href="responsiveCss" />
     <!-- jQuery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="customJs"></script>
-    <script id="myDataObj" type="application/json">dataObj</script>
-   
+    <script id="myDataObj">dataObj</script>
+   <style>
+      .loader img {
+        height: 100px;
+        width: 100px;
+        position: absolute;
+        top: 36%;
+        left: 47%;
+      }
+      .loader-wrapper {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); 
+    }
+   </style>
   </head>
-  <body ng-app="myApp" ng-controller="PickListController">
-    <div ng-show="loading" class="loader loader-wrapper">
+  
+<div ng-show="loading" class="loader loader-wrapper">
       <img src="loaderUrl" />
     </div>
     <!--nswms_main_header starts-->
@@ -28,8 +45,8 @@
           <i class="fa fa-arrow-left" aria-hidden="true"></i>
         </span>
       </div>
-      <div class="header_center_logo" ng-click="goBack()">
-        <h4>Pick List </h4>
+      <div class="header_center_logo">
+        <h4>Pick List</h4>
       </div>
       <div class="header_right">
         <span ng-click="logOut()">
@@ -37,116 +54,270 @@
         </span>
       </div>
     </div>
-    <!--nswms_main_header ends-->
- <!--nswms_main_body starts-->
- <div class="nswms_main_body">
-    <div class="container">
-      <div class="inv_adj_fields mb-2">
-        <div class="row d-flex justify-content-between">
-          <div class="col-md-4 col-sm-6 col-6 col-xs-6">
-              <p class="fw-bolder mb-1">
-                <i class="fa fa-map-marker" aria-hidden="true" style="color:#bd3b3b;"></i><span class="fw-normal"> {{locObj.name}}</span>
-            </p>
+<body ng-controller="MainCtrl as vm" class="pb-5 n">
+  <div class="container py-3 nswms_main_body">
+    <div class="page-header">
+      <i class="bi bi-box-seam text-primary" style="font-size:1.6rem"></i>
+
+      <div class="ms-auto text-end">
+        <div class="small-muted">Logged in:</div>
+        <div class="fw-semibold">{{vm.loggedInUser}} • <span class="text-primary">{{vm.loggedInLocation.label}}</span></div>
+      </div>
+    </div>
+
+    <!-- Stepper compact -->
+    <!-- <div class="d-flex gap-3 align-items-center mb-3 small-muted">
+      <div ng-class="{'fw-bold text-primary': vm.step===1}">1 Orders</div>
+      <i class="bi bi-chevron-right"></i>
+      <div ng-class="{'fw-bold text-primary': vm.step===2}">2 Items in Order</div>
+      <i class="bi bi-chevron-right"></i>
+      <div ng-class="{'fw-bold text-primary': vm.step===3}">3 Resolve / Assign</div>
+    </div> -->
+
+    <!-- STEP 1: Orders list -->
+    <div ng-show="vm.step===1" class="row g-3">
+      <div class="col-12 col-md-6 col-xl-4" ng-repeat="order in vm.orders">
+        <div class="card light h-100">
+          <div class="card-header light d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">Order #{{order.id}}</div>
+              <div class="small-muted">Customer: {{order.customer}}</div>
+            </div>
+            <div class="text-end">
+              <div class="small"><span class="badge bg-info text-dark">{{order.lines.length}} items</span></div>
+              <div class="small-muted mt-1">Assigned: <strong>{{order.assignedTo || 'Unassigned'}}</strong></div>
+            </div>
           </div>
-          <!-- <div class="col-md-4 col-sm-6 col-6 col-xs-6">
-              <p class="picklist_assign mb-1" id="checkvalue" ng-click="assignedorders()">
-                <span>Assigned</span> <span class="fw-normal"><input type="checkbox"></span>
-              </p>
-          </div> -->
+          <div class="card-body">
+            <div class="mb-2 small-muted">Tags</div>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-light text-dark" ng-repeat="t in order.tags">{{t}}</span>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent d-flex gap-2">
+            <button class="btn btn-outline-primary flex-fill btn-action" ng-click="vm.openOrder(order)"><i class="bi bi-eye me-2"></i>Open</button>
+            <button class="btn btn-primary flex-fill btn-action" ng-click="vm.startPicking(order)"><i class="bi bi-play-fill me-2"></i>Start</button>
+          </div>
         </div>
       </div>
+    </div>
 
+    <!-- STEP 2: Items in selected order -->
+    <div ng-show="vm.step===2">
+      <div class="d-flex align-items-center mb-3">
+        <button class="btn btn-outline-secondary btn-sm me-2" ng-click="vm.backToOrders()"><i class="bi bi-arrow-left"></i></button>
+        <h2 class="h5 m-0">Order #{{vm.activeOrder.id}} — Items</h2>
+        <div class="ms-auto small-muted">Customer: {{vm.activeOrder.customer}}</div>
+      </div>
 
-      <div class="input_fields mb-2">
-        <div class="row justify-content-between">
-          <div class="picklist_select col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
-            <select ng-model="transactionlist" ng-change="selectTransaction()" class="select-control" id="transactionlist">
-              <option value =""> All Types </option>
-              <option value = "Sales Order">SO</option>
-              <option value = "Transfer Order">TO</option>
-            </select>
-          </div>
-          <div class="col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
-            <div class="input-group inv_adj_status_list">
-              <input type="text" ng-model="scannedOrder" ng-blur="scanOrder(scannedOrder)" class="form-control" placeholder="Scan order" id="scanitem" />
-			   <div class="input-group-append" ng-click="openScanner()">
-                <div class="camera-icon">
-                  <i class="fas fa-camera"></i>
+      <div class="row items-grid g-3">
+        <div class="col-12 col-md-6" ng-repeat="(li, line) in vm.activeOrder.lines">
+          <div class="card light item-card" ng-attr-id="itemCard{{li}}">
+            <div class="card-header light d-flex align-items-center justify-content-between item-header" >
+              <div class="d-flex align-items-center gap-3">
+                <div>
+                  <div class="fw-semibold">{{line.itemName}}</div>
+                  <div class="small-muted">Item: {{line.itemId}} • UPC: {{line.upc}}</div>
+                  <div class="small-muted">Item Location: <strong>{{line.itemLocationLabel}}</strong></div>
                 </div>
               </div>
+
+              <div class="text-end">
+                <div><span class="badge bg-secondary">Order Qty: {{line.orderQty}}</span></div>
+                <div class="mt-1"><span class="badge bg-success">Picked: {{line.pickedQty || 0}}</span></div>
+
+                <!-- Reassign button moved to item header; visible only per rules -->
+                <div class="mt-2">
+                  <button class="btn btn-sm btn-warning d-none" ng-if="false">placeholder</button>
+                  <button class="btn btn-sm btn-outline-warning" ng-if="vm.showReassign(line)" ng-click="vm.openReassign(line)">
+                    <i class="bi bi-person-plus"></i>
+                    <span class="ms-1">Reassign</span>
+                    <span class="ms-2 reassign-badge" ng-if="vm.reassignMode(line)==='location'">Location</span>
+                    <span class="ms-2 reassign-badge" ng-if="vm.reassignMode(line)==='zones'">Zones</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Card body (collapsible on mobile) -->
+            <div class="card-body collapse show" ng-attr-id="itemBody{{li}}">
+              <div class="mb-2 small-muted">Assigned Bins (Exact — no surplus)</div>
+
+              <div class="d-flex flex-column gap-2">
+                <div class="d-flex align-items-center justify-content-between p-2 rounded bin-row" ng-repeat="(bi, bin) in line.assignedBins">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="bin-chip"><i class="bi bi-hdd-stack"></i>{{bin.binId}}</span>
+                    <span class="qty-pill">Assigned: {{bin.assigned}}</span>
+                    <span class="qty-pill">Picked: {{bin.picked || 0}}</span>
+                  </div>
+                  <div class="d-flex gap-2 align-items-center">
+                    <!-- Keep old per-bin actions, but primary reassign is in header -->
+                    <button class="btn btn-outline-warning btn-sm btn-action" ng-click="vm.resolveShortage(line, bin)" title="Propose next FIFO bin if this bin is short"><i class="bi bi-arrow-repeat"></i></button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="card-footer d-flex gap-2">
+              <button class="btn btn-outline-secondary btn-tap" ng-click="vm.resolveItem(line)"><i class="bi bi-lightning-charge me-1"></i> Validate Now</button>
+              <button class="btn btn-primary btn-tap ms-auto" ng-click="vm.goToResolve(line)"><i class="bi bi-arrow-right me-1"></i> Continue</button>
             </div>
           </div>
         </div>
       </div>
-    <div class="row">
-      <div class="col-md-4 col-sm-6 col-6 col-xs-6"></div>
-        <div class="picklist_date mb-2 d-flex justify-content-center">
-          <span class="fw-bolder">
-            <label for="html">From Date : </label><br>
-            <input type="date" placeholder="From Date"  id="fromdate"ng-model="fromDate"/>
-          </span>
-      
-        <span class="fw-bolder">
-          <label for="html">To Date: </label><br>
-          <input type="date" placeholder="To Date" id="todate" ng-model="toDate"/>
-        </span>
-     
-        <span class="pickup_search_btn" ng-click="searchbydate()">
-          <button class="btn btn-danger">Search</button>
-        </span>
-      </div>
-      </div>
-   
 
-    <div class="pickup_main_card mt-1">
-      <div class="row justify-content-between item-lookup-details">
-        <div class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2"ng-repeat="result in listObj">
-            <div class="card p-2" ng-click="onClick(result)">
-              <div class="checkbox-wrapper">
-                <td><input class="print-checkbox" type="radio" name="selectedResult" ng-model="$parent.selectedResult" ng-value="result" > </td>
-              </div>
-              <table>
-                <tr>
-                  <td class="card-td1"><b>Order Number</b></td>
-                  <td class="card-td2">:</td>
-                  <td class="card-td3">{{result.docNumber}}</td>
-                </tr>
-                <!-- <tr ng-if="result.Type == 'Sales Order'">
-                  <td class="card-td1"> <b>Customer</b></td>
-                  <td class="card-td2">:</td>
-                  <td class="card-td3">{{result.customerNames}}</td>
-                </tr>
-                <tr> -->
-                  <td class="card-td1"> <b>Date</b></td>
-                  <td class="card-td2">:</td>
-                  <td class="card-td3">{{result.dates}}</td>
-                </tr>
-                <tr>
-                  <td class="card-td1"> <b>Transaction</b></td>
-                  <td class="card-td2">:</td>
-                  <td class="card-td3">{{result.Type}}</td>
-                </tr>
-                <!-- <tr>
-                  <td class="card-td1"> <b>checkbox</b></td>
-                  <td class="card-td2">:</td>
-                  <td class="card-td3">{{result.checkbox}}</td>
-                </tr>
-                <tr>
-                  <td class="card-td1"> <b>emp</b></td>
-                  <td class="card-td2">:</td>
-                  <td class="card-td3">{{result.emp}}</td>
-                </tr> -->
-            </table>
-              </div>
-        </div>    
+      <div class="d-flex justify-content-end mt-3 gap-2">
+        <button class="btn btn-outline-secondary" ng-click="vm.backToOrders()">Back</button>
+        <button class="btn btn-success" ng-click="vm.reviewAll()">Review & Confirm</button>
       </div>
     </div>
-    <footer class="inv_adj_footer button " ng-click="pickOrder()">        
-      <span class="footer-desktop">PICK</span>         
-  </footer>
+
+    <!-- STEP 3: Resolve / Assign (consolidated) -->
+    <div ng-show="vm.step===3">
+      <div class="d-flex align-items-center mb-3">
+        <button class="btn btn-outline-secondary btn-sm me-2" ng-click="vm.step=2"><i class="bi bi-arrow-left"></i></button>
+        <h2 class="h5 m-0">Resolve & Assign — Order #{{vm.activeOrder.id}}</h2>
+      </div>
+
+      <div class="card light">
+        <div class="card-header light">Summary</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-borderless align-middle">
+              <thead>
+                <tr class="small-muted">
+                  <th>Item</th>
+                  <th>Bin</th>
+                  <th class="text-end">Assigned</th>
+                  <th class="text-end">Picked</th>
+                  <th class="text-end">Still Reserved</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="line in vm.activeOrder.lines">
+                  <td colspan="6" class="small-muted">{{line.itemName}}</td>
+                </tr>
+                <tr ng-repeat="line in vm.activeOrder.lines" ng-repeat-start></tr>
+                <tr ng-repeat="bin in line.assignedBins">
+                  <td>{{line.itemName}}</td>
+                  <td><span class="bin-chip">{{bin.binId}}</span></td>
+                  <td class="text-end">{{bin.assigned}}</td>
+                  <td class="text-end">{{bin.picked || 0}}</td>
+                  <td class="text-end">{{bin.assigned - (bin.picked||0)}}</td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-outline-warning me-1" ng-click="vm.resolveShortage(line, bin)">Next FIFO</button>
+                    <button class="btn btn-sm btn-outline-info" ng-click="vm.openReassign(line)">Reassign</button>
+                  </td>
+                </tr>
+                <tr ng-repeat-end></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end gap-2">
+          <button class="btn btn-outline-secondary" ng-click="vm.step=2">Back</button>
+          <button class="btn btn-success" ng-click="vm.confirmFulfillment()"><i class="bi bi-check2-circle me-1"></i>Confirm & Fulfill</button>
+        </div>
+      </div>
     </div>
-</div>
-</div>
-<!--nswms_main_body ends-->
-    </body>
+
+  </div>
+
+  <!-- sticky footer for mobile/quick actions -->
+  <div class="sticky-footer d-md-none">
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary flex-fill" ng-click="vm.backToOrders()">← Back</button>
+      <button class="btn btn-success flex-fill" ng-click="vm.reviewAll()">Review & Confirm</button>
+    </div>
+  </div>
+
+  <!-- Modal: Resolve Shortage / Next FIFO Suggestion -->
+  <div class="modal fade" id="nextBinModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Next FIFO Bin Suggestion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="small-muted mb-2">If current bin is short, the system suggests the next bin(s), <strong>excluding</strong> already reserved quantities.</div>
+          <div class="mb-2"><strong>Item:</strong> {{vm.modal.item.itemName}}</div>
+          <div class="mb-2"><strong>Current Bin:</strong> <span class="bin-chip">{{vm.modal.bin.binId}}</span> (Assigned {{vm.modal.bin.assigned}})</div>
+          <div class="mb-3"><strong>Shortfall:</strong> {{vm.modal.shortfall}} qty</div>
+          <div class="list-group">
+            <div class="list-group-item d-flex justify-content-between align-items-center" ng-repeat="s in vm.modal.suggestions">
+              <div>
+                <span class="bin-chip">{{s.binId}}</span>
+                <small class="text-muted ms-2">Free: {{s.freeQty}}</small>
+              </div>
+              <div>
+                <input type="number" class="form-control form-control-sm" style="width:100px" min="0" max="{{s.freeQty}}" ng-model="s.takeQty">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" ng-click="vm.applyNextBins()">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Reassign (Item-level) -->
+  <div class="modal fade" id="reassignModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Reassign — {{vm.modal.item && vm.modal.item.itemName}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="small-muted mb-2">Mode: <strong>{{vm.modal.mode}}</strong></div>
+
+          <!-- Location mode: full location reassignment -->
+          <div ng-if="vm.modal.mode==='location'">
+            <div class="mb-2"><strong>Current Item Location:</strong> {{vm.modal.item.itemLocationLabel}}</div>
+            <div class="mb-3">
+              <label class="form-label">Assign full item to location</label>
+              <select class="form-select" ng-model="vm.modal.targetLocation" ng-options="l.label for l in vm.locations"></select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Assign to picker</label>
+              <select class="form-select" ng-model="vm.modal.targetPicker" ng-options="p for p in vm.pickers"></select>
+            </div>
+          </div>
+
+          <!-- Zones mode: choose which zone/bin to reassign -->
+          <div ng-if="vm.modal.mode==='zones'">
+            <div class="mb-2"><strong>Assigned Zones/Bins (select bins to reassign):</strong></div>
+            <div class="list-group mb-3">
+              <label class="list-group-item d-flex justify-content-between align-items-center" ng-repeat="b in vm.modal.zoneOptions">
+                <div>
+                  <input type="checkbox" ng-model="b._checked"> <span class="bin-chip">{{b.binId}}</span>
+                  <small class="text-muted ms-2">Assigned: {{b.assigned}} • Picked: {{b.picked||0}}</small>
+                </div>
+                <div>
+                  <input class="form-control form-control-sm" style="width:80px; display:inline-block" ng-model="b._reassignQty" min="0" max="{{b.assigned - (b.picked||0)}}" placeholder="qty">
+                </div>
+              </label>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Assign selected to picker</label>
+              <select class="form-select" ng-model="vm.modal.targetPicker" ng-options="p for p in vm.pickers"></select>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" ng-click="vm.applyReassign()">Apply Reassign</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
     </html>

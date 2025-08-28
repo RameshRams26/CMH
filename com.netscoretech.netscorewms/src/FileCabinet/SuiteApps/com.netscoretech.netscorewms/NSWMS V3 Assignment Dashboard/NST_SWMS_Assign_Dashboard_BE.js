@@ -16,7 +16,7 @@ define(['N/search', 'N/record', 'N/runtime', '../NSWMS V3 Globals/utility_module
   utility,
 ) {
   const AssignDashboard = {
-    testIds: ['2929721', '2929723', '2929728', '2929729'],
+    testIds: ['2929721', '2929723', '2929728', '2929729', '2930533'],
     pendingStatusIds: ['1', '2'],
     deliveryTypeListId: 'customlist_itbs_so_delivery_option',
     headerRecordType: 'customrecord_nst_wms_v3_so_assign_header',

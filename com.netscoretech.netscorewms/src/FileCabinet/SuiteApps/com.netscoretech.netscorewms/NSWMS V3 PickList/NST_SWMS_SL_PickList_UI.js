@@ -36,20 +36,20 @@ define(['N/https', 'N/query', 'N/url', '../NSWMS V3 Globals/utility_module'], /*
       urlObj.shipTo = '';
       var Html,
         filesObj = utility.getFilesInFolder('NSWMS V3 PickList', true),
-        globalFiles = utility.getFilesInFolder('NSWMS V3 Globals', true),
+        // globalFiles = utility.getFilesInFolder('NSWMS V3 Globals', true),
         images = utility.getFilesInFolder('NSWMS V3 Images', true);
       Html = https.get({
         url: filesObj['NST_SWMS_PickList_Template.html'],
       });
-
       var HtmlDocument = Html.body;
       log.debug('HtmlDocument', HtmlDocument);
       HtmlDocument = HtmlDocument.replace('customJs', filesObj['NST_SWMS_PickList_Assets.js']);
       var serializedObject = urlObj;
       HtmlDocument = HtmlDocument.replace('dataObj', JSON.stringify(serializedObject));
       HtmlDocument = HtmlDocument.replace('loaderUrl', images['nswms_loader.svg']);
-      HtmlDocument = HtmlDocument.replace('customCss', globalFiles['NSWMS_Global.css']);
-      HtmlDocument = HtmlDocument.replace('responsiveCss', globalFiles['NSWMS_Global_Responsive.css']);
+      HtmlDocument = HtmlDocument.replace('customCss', filesObj['NST_SWMS_PickList.css']);
+
+      // HtmlDocument = HtmlDocument.replace('responsiveCss', globalFiles['NSWMS_Global_Responsive.css']);
       scriptContext.response.write(HtmlDocument);
     } catch (e) {
       log.error('Catch Block Message In nst_wms_SL_PickList_UI::', e);
