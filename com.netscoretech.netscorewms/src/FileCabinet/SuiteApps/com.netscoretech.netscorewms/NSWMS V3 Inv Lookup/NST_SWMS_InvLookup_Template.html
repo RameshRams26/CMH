@@ -4,27 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Inventory Lookup</title>
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="customCss" />
     <link rel="stylesheet" href="responsiveCss" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap">
-    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap" />
 
     <script src="customJs" defer type="text/javascript"></script>
-    <script id="myDataObj">
+    <script id="myDataObj" type="application/json">
       dataObj
     </script>
     <style>
-body{
+      body {
         font-family: 'Lato', sans-serif !important;
-
       }
-
     </style>
   </head>
   <body ng-app="myApp" ng-controller="invLookupController">
@@ -52,26 +49,26 @@ body{
     <div class="nswms_main_body">
       <div class="container">
         <div class="input_fields pt-2">
-          <div class="row justify-content-between">         
+          <div class="row justify-content-between">
             <!-- <div class="col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
               <div class="ns_input-right">
                 <input type="text" focus-on-load  ng-model="scannedItem" class="form-control"  ng-blur="getItemDetails()"placeholder="Scan item / UPC" id="scanitem" />
                 <i ng-click="openScanner()" class="fa fa-camera cam-icon" aria-hidden="true"></i> 
               </div>
             </div> -->
-			
+
             <div class="col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
               <div class="input-group inv_adj_status_list">
-                <input type="text" ng-model="scannedItem" class="form-control" ng-blur="getItemDetails()" placeholder="Scan item / UPC" .
-				id="scanitem" / autofocus>
-                <div class="input-group-append" id="cameraDiv" ng-click="openScanner()" >
+                <input type="text" ng-model="scannedItem" class="form-control" ng-blur="getItemDetails()"
+                placeholder="Scan item / UPC" . id="scanitem" / autofocus>
+                <div class="input-group-append" id="cameraDiv" ng-click="openScanner()">
                   <div class="camera-icon">
                     <i class="fas fa-camera"></i>
                   </div>
                 </div>
               </div>
             </div>
-			
+
             <div class="col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
               <!-- <div class="ns_input-left">
                 <input type="text" class="form-control" ng-model="searchText"  ng-change="search()" placeholder="Search item" />
@@ -82,54 +79,75 @@ body{
               </div> -->
               <div class="form-group ns_input-left">
                 <div class="autocomplete-dropdown-container">
-                <input type="text" id="myInput" class="form-control" ng-model="searchText" 
-                ng-change="search()" placeholder="Search item">
-                <i class="fa fa-search search-icon" aria-hidden="true"></i>
-                <div class="autocomplete-dropdown" ng-if="showSuggestions">
-                <a ng-repeat="result in results" ng-click="selectResult(result)">{{ result.name }}  </a>
-                </div>
-                </div>
+                  <input
+                    type="text"
+                    id="myInput"
+                    class="form-control"
+                    ng-model="searchText"
+                    ng-change="search()"
+                    placeholder="Search item"
+                  />
+                  <i class="fa fa-search search-icon" aria-hidden="true"></i>
+                  <div class="autocomplete-dropdown" ng-if="showSuggestions">
+                    <a ng-repeat="result in results" ng-click="selectResult(result)">{{ result.name }}</a>
+                  </div>
                 </div>
               </div>
+            </div>
           </div>
         </div>
-        <div class="item_details  d-flex justify-content-start">
+        <div class="item_details d-flex justify-content-start">
           <div lass="item_image">
             <div>
-              <img src="{{itemData.image}}" style="
-                height: 100px;
-                width: 110px;
-                border: 1px solid #d8d8d8;
-                border-radius: 5px;
-              " />
+              <img
+                src="{{itemData.image}}"
+                style="height: 100px; width: 110px; border: 1px solid #d8d8d8; border-radius: 5px"
+              />
             </div>
             <div>
               <button ng-disabled="!itemData.itemName" class="ns_upload-cam btn" ng-click="addPhoto($event)">
-                 ADD PHOTO </button>
-              </div>
+                ADD PHOTO
+              </button>
+            </div>
           </div>
           <div class="item_data">
             <div class="d-flex">
-              <h6 class="fw-bolder"> Item : <small class="fw-normal"> {{itemData.itemName}}</small>
+              <h6 class="fw-bolder">
+                Item :
+                <small class="fw-normal">{{itemData.itemName}}</small>
               </h6>
             </div>
             <div class="d-flex">
-              <h6 class="fw-bolder"> UPC : <small class="fw-normal"> {{itemData.upc}}</small>
+              <h6 class="fw-bolder">
+                UPC :
+                <small class="fw-normal">{{itemData.upc}}</small>
               </h6>
             </div>
             <div class="d-flex">
-              <h6 class="fw-bolder"> Stock Units : <small class="fw-normal"> {{itemData.stockUnit}}</small>
+              <h6 class="fw-bolder">
+                Stock Units :
+                <small class="fw-normal">{{itemData.stockUnit}}</small>
               </h6>
             </div>
             <div class="d-flex item-description">
-              <h6 class="fw-bolder"> Description : <small class="fw-normal"> {{itemData.itemDesc | limitTo:500 }} ...</small>
+              <h6 class="fw-bolder">
+                Description :
+                <small class="fw-normal">{{itemData.itemDesc | limitTo:500 }} ...</small>
               </h6>
             </div>
           </div>
         </div>
-        <div class="row justify-content-between item-lookup-details" >
-          <div class="card-rht-space col-md-6 col-sm-6 col-xs-12 col-12 mt-2" ng-repeat="location in itemData['invBalance']">
-            <div class="card p-2" data-bs-toggle="modal" data-bs-target="#exampleModal" ng-click="viewByLocation(location)">
+        <div class="row justify-content-between item-lookup-details">
+          <div
+            class="card-rht-space col-md-6 col-sm-6 col-xs-12 col-12 mt-2"
+            ng-repeat="location in itemData['invBalance']"
+          >
+            <div
+              class="card p-2"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              ng-click="viewByLocation(location)"
+            >
               <table>
                 <tr>
                   <td class="card-td1">
@@ -139,7 +157,7 @@ body{
                   <td class="card-td3 location-bold">{{location.locationId}}</td>
                 </tr>
                 <tr>
-                  <td class="card-td1"> 
+                  <td class="card-td1">
                     <b>On Hand</b>
                   </td>
                   <td class="card-td2">:</td>
@@ -160,43 +178,58 @@ body{
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content inv-lookup-model">
-              <div class="modal-header">   
+              <div class="modal-header">
                 <div class="loc">
-                <div class="left">
-                  <p class="inv_adj_location_id fw-bolder mb-1">  
-                    <i class="fa fa-map-marker" aria-hidden="true" style="color:#bd3b3b;"></i><span class="fw-normal"> {{locationname}} </span>
-                  </p>            
+                  <div class="left">
+                    <p class="inv_adj_location_id fw-bolder mb-1">
+                      <i class="fa fa-map-marker" aria-hidden="true" style="color: #bd3b3b"></i>
+                      <span class="fw-normal">{{locationname}}</span>
+                    </p>
+                  </div>
+                  <p>
+                    <span>
+                      <span>Select All</span>
+                      :
+                      <span><input ng-model="select_all" type="checkbox" ng-click="selectAll(select_all)" /></span>
+                      &nbsp;&nbsp;
+                      <button class="print-button" ng-click="printLables()">
+                        <i class="fa fa-print" aria-hidden="true" style="color: #bd3b3b"></i>
+                      </button>
+                    </span>
+                  </p>
                 </div>
-                <p><span> <span>Select All</span> : <span><input ng-model="select_all" type="checkbox" ng-click="selectAll(select_all)"></span>&nbsp;&nbsp; <button class="print-button" ng-click="printLables()"><i class="fa fa-print" aria-hidden="true" style="color:#bd3b3b;"></i></button> </span></p>           
-            </div>
-            <div class="print">
-              <div class=" right btn-close">
-                <button type="button" class="close-button-right" data-bs-dismiss="modal" aria-label="Close">
-                  <i class="fa fa-times" aria-hidden="true"></i>
-                </button>
+                <div class="print">
+                  <div class="right btn-close">
+                    <button type="button" class="close-button-right" data-bs-dismiss="modal" aria-label="Close">
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-            </div>          
               <div class="modal-body">
                 <div class="row justify-content-between">
-                  <div class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2" ng-repeat="inv in indData" ng-if="prefBin == inv.binNoText && prefBin && inv.binNoText">
-                    <div class="card p-2"  ng-click="cardclick(inv)" style="background-color: #45dc4554;">
+                  <div
+                    class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2"
+                    ng-repeat="inv in indData"
+                    ng-if="prefBin == inv.binNoText && prefBin && inv.binNoText"
+                  >
+                    <div class="card p-2" ng-click="cardclick(inv)" style="background-color: #45dc4554">
                       <div class="checkbox-wrapper">
-                        <td class="print-checkbox"><input ng-model="inv.select" type="checkbox"></td>
+                        <td class="print-checkbox"><input ng-model="inv.select" type="checkbox" /></td>
                       </div>
                       <table>
-                        <tr ng-if="setUpData['useBins'] == true && itemData['isBinItem'] == true" >
+                        <tr ng-if="setUpData['useBins'] == true && itemData['isBinItem'] == true">
                           <td class="card-td1"><b>Bin Number</b></td>
                           <td class="card-td2">:</td>
                           <td class="card-td3">{{inv.binNoText}}</td>
                         </tr>
                         <tr ng-if="setUpData['useSerial'] == true && itemData['isSerialItem'] == true">
-                          <td class="card-td1"> <b>Serial Number</b></td>
+                          <td class="card-td1"><b>Serial Number</b></td>
                           <td class="card-td2">:</td>
                           <td class="card-td3">{{inv.invNoText}}</td>
                         </tr>
                         <tr ng-if="setUpData['useLot'] == true  &&  itemData['isLotItem'] == true">
-                          <td class="card-td1"> <b>Lot Number</b></td>
+                          <td class="card-td1"><b>Lot Number</b></td>
                           <td class="card-td2">:</td>
                           <td class="card-td3">{{inv.invNoText}}</td>
                         </tr>
@@ -219,57 +252,60 @@ body{
                           <td class="card-td1"><b>Receipt Date</b></td>
                           <td class="card-td2">:</td>
                           <td class="card-td3">{{inv.expirationDate}}</td>
-                        </tr> 
+                        </tr>
                       </table>
-                      </div>
                     </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2" ng-repeat="inv in indData" ng-if="prefBin !== inv.binNoText || !prefBin || !inv.binNoText">
-                      <div class="card p-2" ng-click="cardclick(inv)">
-                        <div class="checkbox-wrapper" >
-                          <td class="print-checkbox"><input ng-model="inv.select" type="checkbox"></td>
-                        </div>
-                        <table>                        
-                          <tr ng-if="setUpData['useBins'] == true && itemData['isBinItem'] == true">
-                            <td class="card-td1"><b>Bin</b></td>
-                            <td class="card-td2">:</td>
-                            <td class="card-td3">{{inv.binNoText}}</td>
-                          </tr>
-                          <tr ng-if="setUpData['useSerial'] == true && itemData['isSerialItem'] == true">
-                            <td class="card-td1"> <b>Serial Number</b></td>
-                            <td class="card-td2">:</td>
-                            <td class="card-td3">{{inv.invNoText}}</td>
-                          </tr>
-                          <tr ng-if="setUpData['useLot'] == true  &&  itemData['isLotItem'] == true">
-                            <td class="card-td1"> <b>Lot Number</b></td>
-                            <td class="card-td2">:</td>
-                            <td class="card-td3">{{inv.invNoText}}</td>
-                          </tr>
-                          <tr>
-                            <td class="card-td1"><b>On Hand</b></td>
-                            <td class="card-td2">:</td>
-                            <td class="card-td3">{{inv.onHand}}</td>
-                          </tr>
-                          <tr>
-                            <td class="card-td1"><b>Available</b></td>
-                            <td class="card-td2">:</td>
-                            <td class="card-td3">{{inv.available}}</td>
-                          </tr>
-                          <tr ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
-                            <td class="card-td1"><b>Inv Status</b></td>
-                            <td class="card-td2">:</td>
-                            <td class="card-td3">{{inv.invStatus}}</td>
-                          </tr>
-                          <tr ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
-                            <td class="card-td1"><b>Receipt Date</b></td>
-                            <td class="card-td2">:</td>
-                            <td class="card-td3">{{inv.expirationDate}}</td>
-                          </tr>                        
-                        </table>
-                        </div>
-                      </div> 
                   </div>
+                  <div
+                    class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2"
+                    ng-repeat="inv in indData"
+                    ng-if="prefBin !== inv.binNoText || !prefBin || !inv.binNoText"
+                  >
+                    <div class="card p-2" ng-click="cardclick(inv)">
+                      <div class="checkbox-wrapper">
+                        <td class="print-checkbox"><input ng-model="inv.select" type="checkbox" /></td>
+                      </div>
+                      <table>
+                        <tr ng-if="setUpData['useBins'] == true && itemData['isBinItem'] == true">
+                          <td class="card-td1"><b>Bin</b></td>
+                          <td class="card-td2">:</td>
+                          <td class="card-td3">{{inv.binNoText}}</td>
+                        </tr>
+                        <tr ng-if="setUpData['useSerial'] == true && itemData['isSerialItem'] == true">
+                          <td class="card-td1"><b>Serial Number</b></td>
+                          <td class="card-td2">:</td>
+                          <td class="card-td3">{{inv.invNoText}}</td>
+                        </tr>
+                        <tr ng-if="setUpData['useLot'] == true  &&  itemData['isLotItem'] == true">
+                          <td class="card-td1"><b>Lot Number</b></td>
+                          <td class="card-td2">:</td>
+                          <td class="card-td3">{{inv.invNoText}}</td>
+                        </tr>
+                        <tr>
+                          <td class="card-td1"><b>On Hand</b></td>
+                          <td class="card-td2">:</td>
+                          <td class="card-td3">{{inv.onHand}}</td>
+                        </tr>
+                        <tr>
+                          <td class="card-td1"><b>Available</b></td>
+                          <td class="card-td2">:</td>
+                          <td class="card-td3">{{inv.available}}</td>
+                        </tr>
+                        <tr ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
+                          <td class="card-td1"><b>Inv Status</b></td>
+                          <td class="card-td2">:</td>
+                          <td class="card-td3">{{inv.invStatus}}</td>
+                        </tr>
+                        <tr ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
+                          <td class="card-td1"><b>Receipt Date</b></td>
+                          <td class="card-td2">:</td>
+                          <td class="card-td3">{{inv.expirationDate}}</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               </div>
-
             </div>
           </div>
         </div>

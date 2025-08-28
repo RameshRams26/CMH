@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bin PutAway</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="customCss" />
@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="customJs"></script>
-    <script id="myDataObj">
+    <script id="myDataObj" type="application/json">
       dataObj
     </script>
     <style>
@@ -54,8 +54,8 @@
           <div class="row d-flex justify-content-between">
             <div class="col-md-4 col-sm-6 col-6 col-xs-6">
               <p class="fw-bolder mb-1">
-                <i class="fa fa-map-marker" aria-hidden="true" style="color:#bd3b3b;"></i>
-                <span class="fw-normal"> {{locObj.name}}</span>
+                <i class="fa fa-map-marker" aria-hidden="true" style="color: #bd3b3b"></i>
+                <span class="fw-normal">{{locObj.name}}</span>
               </p>
             </div>
           </div>
@@ -64,7 +64,14 @@
           <div class="row justify-content-between">
             <div class="col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
               <div class="input-group inv_adj_status_list">
-                <input type="text" ng-model="scannedItem" class="form-control" ng-blur="getItemDetails()" placeholder="Scan item / UPC" id="scanitem" />
+                <input
+                  type="text"
+                  ng-model="scannedItem"
+                  class="form-control"
+                  ng-blur="getItemDetails()"
+                  placeholder="Scan item / UPC"
+                  id="scanitem"
+                />
                 <div class="input-group-append" id="cameraDiv" ng-click="openScanner()">
                   <div class="camera-icon">
                     <i class="fas fa-camera"></i>
@@ -75,7 +82,14 @@
             <div class="col-md-4 col-lg-3 col-sm-6 col-6 col-xs-6">
               <div class="form-group ns_input-left">
                 <div class="autocomplete-dropdown-container">
-                  <input type="text" id="myInput" class="form-control" ng-model="searchText" ng-change="search()" placeholder="Search item">
+                  <input
+                    type="text"
+                    id="myInput"
+                    class="form-control"
+                    ng-model="searchText"
+                    ng-change="search()"
+                    placeholder="Search item"
+                  />
                   <i class="fa fa-search search-icon" aria-hidden="true"></i>
                   <div class="autocomplete-dropdown" ng-if="showSuggestions">
                     <a ng-repeat="result in results" ng-click="selectResult(result)">{{ result.name }}</a>
@@ -85,15 +99,23 @@
             </div>
           </div>
           <div class="inv_adj_fields d-flex justify-content-between transactions">
-            <p class="inv_adj_id  mb-1">BackUp ID: <span class="fw-normal">{{backUpRecText}}</span>
+            <p class="inv_adj_id mb-1">
+              BackUp ID:
+              <span class="fw-normal">{{backUpRecText}}</span>
             </p>
-            <p class="inv_adj_item_id  mb-1"> Item Count: <span class="fw-normal">{{binPutAwayItems.length}}</span>
+            <p class="inv_adj_item_id mb-1">
+              Item Count:
+              <span class="fw-normal">{{binPutAwayItems.length}}</span>
             </p>
           </div>
           <div class="pickup_main_card mt-1">
             <div class="row justify-content-between item-lookup-details">
               <div class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2" ng-repeat="item in binPutAwayItems">
-                <div ng-class="{'card p-2': item.putAwayQty == 0, 'customClass card p-2': item.putAwayQty > 0 }" ng-click="viewItem(item)" ng-click="viewItem(item)">
+                <div
+                  ng-class="{'card p-2': item.putAwayQty == 0, 'customClass card p-2': item.putAwayQty > 0 }"
+                  ng-click="viewItem(item)"
+                  ng-click="viewItem(item)"
+                >
                   <table>
                     <tr>
                       <td class="card-td1">
@@ -104,21 +126,21 @@
                     </tr>
                     <tr>
                       <td class="card-td1">
-                        <b>Preferred Bin </b>
+                        <b>Preferred Bin</b>
                       </td>
                       <td class="card-td2">:</td>
                       <td class="card-td3">{{item.preBinText}}</td>
                     </tr>
                     <tr>
                       <td class="card-td1">
-                        <b>Available Quantity </b>
+                        <b>Available Quantity</b>
                       </td>
                       <td class="card-td2">:</td>
                       <td class="card-td3">{{item.qty}}</td>
                     </tr>
                     <tr>
                       <td class="card-td1">
-                        <b>PutAway Quantity </b>
+                        <b>PutAway Quantity</b>
                       </td>
                       <td class="card-td2">:</td>
                       <td class="card-td3">{{item.putAwayQty}}</td>
@@ -133,18 +155,14 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close-button" data-bs-dismiss="modal" aria-label="Close">
-                   Close
-                  </button>
-                  <button type="button"  ng-click="submitConfiguredItem()" class="save-button">
-                    Save
-                  </button>
+                  <button type="button" class="close-button" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                  <button type="button" ng-click="submitConfiguredItem()" class="save-button">Save</button>
                 </div>
                 <div class="modal-body">
                   <div class="inv_adj_main_body">
                     <div class="inv_adj_popup_lft_img d-flex justify-content-start">
                       <div lass="item_image">
-                        <img src="{{itemData.image}}" style="height:100px;width:100px;">
+                        <img src="{{itemData.image}}" style="height: 100px; width: 100px" />
                       </div>
                       <div class="inv_adj_item_data">
                         <table>
@@ -154,7 +172,7 @@
                                 <b>Item</b>
                               </td>
                               <td class="card-td2">:</td>
-                              <td class="card-td3"> {{itemData.itemName}} </td>
+                              <td class="card-td3">{{itemData.itemName}}</td>
                             </tr>
                             <tr>
                               <td class="card-td1">
@@ -189,45 +207,88 @@
                         </table>
                       </div>
                     </div>
-                    <hr>
+                    <hr />
                     <div class="inv_adj_popup_slect">
                       <div class="row">
-                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding" ng-if="itemData['isSerialItem'] == false && itemData['isLotItem'] == false">
+                        <div
+                          class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding"
+                          ng-if="itemData['isSerialItem'] == false && itemData['isLotItem'] == false"
+                        >
                           <div class="input-group inv_adj_status_list">
-                              <input type="text" ng-model="positiveAdj.itemOrUpc" ng-blur="scanItemUpc(positiveAdj.itemOrUpc)" class="form-control" placeholder="Scan Item/UPC" id="scanitem" >
-                              <div class="input-group-append" id="cameraDiv" ng-click="openScanner()">
-                                <div class="camera-icon">
-                                  <i class="fas fa-camera"></i>
-                                </div>
+                            <input
+                              type="text"
+                              ng-model="positiveAdj.itemOrUpc"
+                              ng-blur="scanItemUpc(positiveAdj.itemOrUpc)"
+                              class="form-control"
+                              placeholder="Scan Item/UPC"
+                              id="scanitem"
+                            />
+                            <div class="input-group-append" id="cameraDiv" ng-click="openScanner()">
+                              <div class="camera-icon">
+                                <i class="fas fa-camera"></i>
                               </div>
+                            </div>
                           </div>
                         </div>
-                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding" ng-if="setUpData['useSerial'] == true && itemData['isSerialItem'] == true">
+                        <div
+                          class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding"
+                          ng-if="setUpData['useSerial'] == true && itemData['isSerialItem'] == true"
+                        >
                           <div class="inv_Adj_binlist">
                             <div class="ns_input-scan">
-                              <input ng-model="positiveAdj.serialNO" type="text" class="form-control" ng-blur="scanSerialItem(positiveAdj.serialNO)" placeholder="Scan Serial Number" id="scanitem" >
+                              <input
+                                ng-model="positiveAdj.serialNO"
+                                type="text"
+                                class="form-control"
+                                ng-blur="scanSerialItem(positiveAdj.serialNO)"
+                                placeholder="Scan Serial Number"
+                                id="scanitem"
+                              />
                               <i class="fa fa-camera cam-icon" aria-hidden="true"></i>
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding" ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
+                        <div
+                          class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding"
+                          ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true"
+                        >
                           <div class="inv_Adj_binlist">
                             <div class="ns_input-scan">
-                              <input ng-model="positiveAdj.lotNO" type="text" class="form-control" ng-blur="scanLotItem()" placeholder="Scan lot Number" id="scanitem">
+                              <input
+                                ng-model="positiveAdj.lotNO"
+                                type="text"
+                                class="form-control"
+                                ng-blur="scanLotItem()"
+                                placeholder="Scan lot Number"
+                                id="scanitem"
+                              />
                               <i class="fa fa-camera cam-icon" aria-hidden="true"></i>
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding" ng-if="setUpData['useBins'] == true && itemData['isBinItem'] == true">
+                        <div
+                          class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding"
+                          ng-if="setUpData['useBins'] == true && itemData['isBinItem'] == true"
+                        >
                           <div class="inv_adj_status_list">
-                            <select ng-model="positiveAdj.binNO" ng-change="selectPosBin()" class="form-control" ng-options="option.id as option.value for option in allBins">
+                            <select
+                              ng-model="positiveAdj.binNO"
+                              ng-change="selectPosBin()"
+                              class="form-control"
+                              ng-options="option.id as option.value for option in allBins"
+                            >
                               <option value="">Select Bin</option>
                             </select>
                           </div>
                         </div>
                         <div class="col-md-4 col-xs-6 col-sm-4 grid-padding" ng-if="setUpData['useInvStatus'] == true">
                           <div class="inv_adj_status_list">
-                            <select ng-model="positiveAdj.selectedStatus" ng-change="selectPosStatus()"  class="form-control" ng-options="option.invStatusId as option.invStatus for option in allStatus">
+                            <select
+                              ng-model="positiveAdj.selectedStatus"
+                              ng-change="selectPosStatus()"
+                              class="form-control"
+                              ng-options="option.invStatusId as option.invStatus for option in allStatus"
+                            >
                               <option value="" disabled>From Status</option>
                             </select>
                           </div>
@@ -235,32 +296,56 @@
                         <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding">
                           <div class="inv_adj_serial_qty">
                             <span>
-                              <input type="text" ng-model="positiveAdj.avlQty"  placeholder="AvlQty" class="form-control" disabled>
+                              <input
+                                type="text"
+                                ng-model="positiveAdj.avlQty"
+                                placeholder="AvlQty"
+                                class="form-control"
+                                disabled
+                              />
                             </span>
                           </div>
                         </div>
-                        <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding" ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true">
+                        <div
+                          class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding"
+                          ng-if="setUpData['useLot'] == true &&  itemData['isLotItem'] == true"
+                        >
                           <div class="inv_adj_serial_qty">
                             <span>
-                              <input ng-model="positiveAdj.date" type="text"  placeholder="ExpDate" class="form-control" disabled>
+                              <input
+                                ng-model="positiveAdj.date"
+                                type="text"
+                                placeholder="ExpDate"
+                                class="form-control"
+                                disabled
+                              />
                             </span>
                           </div>
                         </div>
                         <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding">
                           <div class="inv_adj_serial_qty">
                             <span>
-                              <input ng-model="positiveAdj.qty" ng-disabled="disableQty" ng-change="enterQuantity()" type="text" class="form-control" placeholder="Quantity">
+                              <input
+                                ng-model="positiveAdj.qty"
+                                ng-disabled="disableQty"
+                                ng-change="enterQuantity()"
+                                type="text"
+                                class="form-control"
+                                placeholder="Quantity"
+                              />
                             </span>
                           </div>
                         </div>
                         <div class="col-md-4 col-xs-6 col-sm-4 col-lg-4 grid-padding add-button">
-                          <button type="button" class="btn btn-add-details" ng-click="addPosConfiguredItem()">Add Details</button>
+                          <button type="button" class="btn btn-add-details" ng-click="addPosConfiguredItem()">
+                            Add Details
+                          </button>
                         </div>
                       </div>
                     </div>
                     <div class="inv_adj_popup_detail">
                       <div class="row justify-content-between">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2"  ng-repeat="item in configuredItems">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-12 mt-2" ng-repeat="item in configuredItems">
                           <div class="card p-2">
                             <div class="checkbox-wrapper">
                               <i class="fa fa-trash" aria-hidden="true" ng-click="deleteConfiguredItem($index)"></i>
@@ -273,7 +358,6 @@
                                   </td>
                                   <td class="card-td2">:</td>
                                   <td class="card-td3">{{item.lotNO}}</td>
-                                 
                                 </tr>
                                 <tr ng-if="setUpData['useSerial'] == true && itemData['isSerialItem'] == true">
                                   <td class="card-td1">
@@ -281,7 +365,6 @@
                                   </td>
                                   <td class="card-td2">:</td>
                                   <td class="card-td3">{{item.serialNO}}</td>
-                                 
                                 </tr>
                                 <tr ng-if="setUpData['useBins'] == true &&  itemData['isBinItem'] == true">
                                   <td class="card-td1">

@@ -4,35 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="customCss" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="customJs"></script>
-    <script id="myDataObj">
+    <script id="myDataObj" type="application/json">
       dataObj
     </script>
   </head>
   <body ng-app="myApp" ng-controller="logInController">
     <div class="container">
-      <img src="login_background" class="login-bg-desktop">
-      <img src="login_bg_tablet" class="login-bg-tablet"> 
-      <img src="login_bg_mobile" class="login-bg-mobile">    
-  </div>
+      <img src="login_background" class="login-bg-desktop" />
+      <img src="login_bg_tablet" class="login-bg-tablet" />
+      <img src="login_bg_mobile" class="login-bg-mobile" />
+    </div>
     <div ng-show="loading" class="loader loader-wrapper">
       <img src="loaderUrl" />
     </div>
-  
+
     <div class="input-container">
       <div class="logo-image">
         <img src="companyLogo" />
@@ -83,7 +74,7 @@
               maxlength="1"
               ng-keypress="convertToPassword('1')"
               move-next-on-maxlength
-              inputmode="numeric" 
+              inputmode="numeric"
               required
             />
             <input
@@ -94,7 +85,7 @@
               maxlength="1"
               ng-keypress="convertToPassword('2')"
               move-next-on-maxlength
-              inputmode="numeric" 
+              inputmode="numeric"
               required
             />
             <input
@@ -105,7 +96,7 @@
               maxlength="1"
               ng-keypress="convertToPassword('3')"
               move-next-on-maxlength
-              inputmode="numeric" 
+              inputmode="numeric"
               required
             />
             <input
@@ -116,18 +107,13 @@
               maxlength="1"
               ng-keypress="convertToPassword('4')"
               move-next-on-maxlength
-              inputmode="numeric" 
+              inputmode="numeric"
               required
             />
           </div>
         </div>
 
-        <button
-          type="submit"
-          ng-click="login()"
-          class="btn btn-login btn-block"
-          ng-disabled="loginForm.$invalid"
-        >
+        <button type="submit" ng-click="login()" class="btn btn-login btn-block" ng-disabled="loginForm.$invalid">
           SUBMIT
         </button>
       </form>
@@ -140,7 +126,8 @@
       </div>
       <div class="login-qr">
         <button type="submit" class="btn" ng-click="reconfigQR()">
-          <i class="fa fa-qrcode" aria-hidden="true"></i> Re-Configure
+          <i class="fa fa-qrcode" aria-hidden="true"></i>
+          Re-Configure
         </button>
       </div>
     </div>

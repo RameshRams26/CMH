@@ -2,12 +2,7 @@
  * @NApiVersion 2.1
  * @NScriptType Suitelet
  */
-define([
-  "N/https",
-  "N/search",
-  "N/url",
-  "../NSWMS V3 Globals/utility_module",
-], /**
+define(['N/https', 'N/search', 'N/url', '../NSWMS V3 Globals/utility_module'], /**
  * @param{https} https
  * @param{search} search
  * @param{url} url
@@ -25,55 +20,38 @@ define([
       var empId = scriptContext.request.parameters.empId;
       var locationId = scriptContext.request.parameters.locationId;
       var urlObj = {
-        ajaxUrl: "",
+        ajaxUrl: '',
         setUpId: setUpId,
         empId: empId,
         locationId: locationId,
-        logIn: "",
+        logIn: '',
       };
-    //   urlObj.ajaxUrl = utility.getScriptUrl(
-    //     "customscript_nst_wms_binlookup_be",
-    //     "customdeploy_nst_wms_binlookup_be"
-    //   );
-      urlObj.logIn = utility.getScriptUrl(
-        "customscript_nst_wms_login_page",
-        "customdeploy_nst_wms_login_page"
+      urlObj.ajaxUrl = utility.getScriptUrl(
+        'customscript_nst_swms_asign_dashboard_be',
+        'customdeploy_nst_swms_asign_dashboard_be',
       );
+      urlObj.logIn = utility.getScriptUrl('customscript_nst_wms_login_page', 'customdeploy_nst_wms_login_page');
       urlObj.PrintUrl = utility.getScriptUrl(
-        "customscript_nst_wms_assign_dashboard_ui",
-        "customdeploy_nst_wms_assign_dashboard_ui"
+        'customscript_nst_wms_assign_dashboard_ui',
+        'customdeploy_nst_wms_assign_dashboard_ui',
       );
       var Html,
-        filesObj = utility.getFilesInFolder("NSWMS V3 Assignment Dashboard", true),
-        //globalFiles = utility.getFilesInFolder("NSWMS V3 Globals", true),
-        images = utility.getFilesInFolder("NSWMS V3 Images", true);
-       Html = https.get({
-        url: filesObj["NST_SWMS_Assign_Dashboard.html"],
+        filesObj = utility.getFilesInFolder('NSWMS V3 Assignment Dashboard', true),
+        images = utility.getFilesInFolder('NSWMS V3 Images', true);
+      Html = https.get({
+        url: filesObj['NST_SWMS_Assign_Dashboard.html'],
       });
 
       var HtmlDocument = Html.body;
-      log.debug("HtmlDocument", HtmlDocument);
-      HtmlDocument = HtmlDocument.replace(
-        "customJs",
-        filesObj["NST_SWMS_Assign_Dashboard.Assets.js"]
-      );
+      HtmlDocument = HtmlDocument.replace('customJs', filesObj['NST_SWMS_Assign_Dashboard.Assets.js']);
       var serializedObject = urlObj;
-      HtmlDocument = HtmlDocument.replace(
-        "dataObj",
-        JSON.stringify(serializedObject)
-      );
-      HtmlDocument = HtmlDocument.replace(
-        "loaderUrl",
-        images["nswms_loader.svg"]
-      );
-      HtmlDocument = HtmlDocument.replace(
-        "customCss",
-        filesObj["NST_SWMS_Assign_Dashboard.css"]
-      );
-  
+      HtmlDocument = HtmlDocument.replace('dataObj', JSON.stringify(serializedObject));
+      HtmlDocument = HtmlDocument.replace('loaderUrl', images['nswms_loader.svg']);
+      HtmlDocument = HtmlDocument.replace('customCss', filesObj['NST_SWMS_Assign_Dashboard.css']);
+
       scriptContext.response.write(HtmlDocument);
     } catch (e) {
-      log.error("Catch Block Message In NST_SWMS_Assign_Dashboard_UI::", e);
+      log.error('Catch Block Message In NST_SWMS_Assign_Dashboard_UI::', e);
     }
   };
 

@@ -2,7 +2,7 @@
  * @NApiVersion 2.1
  * @NScriptType UserEventScript
  */
-define(["N/record"], /**
+define(['N/record'], /**
  * @param{record} record
  */ (record) => {
   /**
@@ -15,50 +15,71 @@ define(["N/record"], /**
    */
   const afterSubmit = (scriptContext) => {
     try {
-      const id = scriptContext.newRecord.id;
-      var needSave = false;
-      var soRecObj = record.load({
-        type: scriptContext.newRecord.type,
-        id: id,
-        isDynamic: true,
-      });
-      const itemsCount = soRecObj.getLineCount({
-        sublistId: "item",
-      });
-      for (var i = 0; i < itemsCount; i++) {
-        if (soRecObj.getSublistText({sublistId: "item",fieldId: "item",line : i,})) {
-          soRecObj.selectLine({
-            sublistId: "item",
-            line: i,
-          });
-          var lineuniquekey = soRecObj.getCurrentSublistValue({
-            sublistId: "item",
-            fieldId: "lineuniquekey",
-          });
-          var isExists = soRecObj.getCurrentSublistValue({
-            sublistId: "item",
-            fieldId: "custcol_nst_wms_nestcoreid",
-          });
-          var item = soRecObj.getCurrentSublistValue({
-            sublistId: "item",
-            fieldId: "item",
-          })
-          if (!isExists && item) {
-            soRecObj.setCurrentSublistValue({
-              sublistId: "item",
-              fieldId: "custcol_nst_wms_nestcoreid",
-              value: lineuniquekey,
+      if (
+        scriptContext.newRecord.type == 'customrecord_nst_wms_v3_so_assign_header' &&
+        scriptContext.type == 'create'
+      ) {
+        let soId = scriptContext.newRecord.getValue({
+          fieldId: 'custrecord_ns_wms_soah_sales_order',
+        });
+
+        record.submitFields({
+          type: record.Type.SALES_ORDER,
+          id: soId,
+          values: {
+            custbody_nst_wms_assignment_record: scriptContext.newRecord.id,
+          },
+          options: {
+            enableSourcing: false,
+            ignoreMandatoryFields: true,
+          },
+        });
+      } else {
+        const id = scriptContext.newRecord.id;
+        var needSave = false;
+        var soRecObj = record.load({
+          type: scriptContext.newRecord.type,
+          id: id,
+          isDynamic: true,
+        });
+        const itemsCount = soRecObj.getLineCount({
+          sublistId: 'item',
+        });
+        for (var i = 0; i < itemsCount; i++) {
+          if (soRecObj.getSublistText({ sublistId: 'item', fieldId: 'item', line: i })) {
+            soRecObj.selectLine({
+              sublistId: 'item',
+              line: i,
             });
-            if (!needSave) needSave = true;
+            var lineuniquekey = soRecObj.getCurrentSublistValue({
+              sublistId: 'item',
+              fieldId: 'lineuniquekey',
+            });
+            var isExists = soRecObj.getCurrentSublistValue({
+              sublistId: 'item',
+              fieldId: 'custcol_nst_wms_nestcoreid',
+            });
+            var item = soRecObj.getCurrentSublistValue({
+              sublistId: 'item',
+              fieldId: 'item',
+            });
+            if (!isExists && item) {
+              soRecObj.setCurrentSublistValue({
+                sublistId: 'item',
+                fieldId: 'custcol_nst_wms_nestcoreid',
+                value: lineuniquekey,
+              });
+              if (!needSave) needSave = true;
+            }
+            soRecObj.commitLine({
+              sublistId: 'item',
+            });
           }
-          soRecObj.commitLine({
-            sublistId: "item",
-          });
         }
+        if (needSave) soRecObj.save();
       }
-      if (needSave) soRecObj.save();
     } catch (e) {
-      log.error("error", e);
+      log.error('error', e);
     }
   };
 
