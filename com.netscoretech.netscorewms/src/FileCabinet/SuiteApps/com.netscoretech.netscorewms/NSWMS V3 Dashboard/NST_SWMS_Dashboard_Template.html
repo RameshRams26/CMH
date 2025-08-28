@@ -105,6 +105,16 @@
               </div>
             </a>
           </div>
+           <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Assignment Dashboard')">
+            <a href="#" ng-click="openScreen('assignmentDashboard')">
+              <div class="card zoom">
+                <div class="module_image">
+                  <img src="assigndashboard">
+                </div>
+                <h4>Assignment Dashboard</h4>
+              </div>
+            </a>
+          </div>
           <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Pick List') && lFeatures.includes('Pick List') ">
             <a href="#" ng-click="openScreen('pickList')">
               <div class="card zoom">
@@ -125,8 +135,8 @@
               </div>
             </a>
           </div>
-            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Pack List') && lFeatures.includes('Pack List')">
-            <a href="#" ng-click="openScreen('packList')">
+            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Order Deliver Dashboard') && lFeatures.includes('Pack List')">
+            <a href="#" ng-click="openScreen('orderDeliverDashboard')">
               <div class="card zoom">
                 <div class="module_image">
                   <img src="PackList">
@@ -139,7 +149,7 @@
             <a href="#" ng-click="openScreen('postponedOrders')">
               <div class="card zoom">
                 <div class="module_image">
-                  <img src="postponedOrders">
+                  <img src="postponedorder">
                 </div>
                 <h4>Postponed Orders</h4>
               </div>
@@ -155,6 +165,7 @@
               </div>
             </a>
           </div>
+         
         
           <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 grid-card col-4" ng-if="eFeatures.includes('Pack Order') && lFeatures.includes('Pack Order')">
             <a href="#" ng-click="openScreen('packorder')">
