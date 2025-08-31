@@ -9,12 +9,7 @@
  * @date August 25th 2025
  * @author Ramesh Gantala
  */
-define(['N/search', 'N/record', 'N/runtime', '../NSWMS V3 Globals/utility_module'], function (
-  search,
-  record,
-  runtime,
-  utility,
-) {
+define(['N/search', 'N/record', '../NSWMS V3 Globals/utility_module'], function (search, record, utility) {
   const AssignDashboard = {
     testIds: ['2929721', '2929723', '2929728', '2929729', '2930533'],
     pendingStatusIds: ['1', '2'],
