@@ -1,281 +1,226 @@
 <!DOCTYPE html>
-<html>
 <html lang="en" ng-app="pickApp">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pick List</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="customCss" />
-  <!-- jQuery library -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-  <script src="customJs"></script>
-  <script id="myDataObj">dataObj</script>
-  <style>
-    .loader img {
-      height: 100px;
-      width: 100px;
-      position: absolute;
-      top: 36%;
-      left: 47%;
-    }
-
-    .loader-wrapper {
-      position: fixed;
-      z-index: 9999;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .filter-card {
-      background: white;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: var(--card-shadow);
-    }
-
-    .form-label.small {
-      font-weight: 600;
-      color: var(--gray-700) !important;
-    }
-
-    .input-group {
-      position: relative;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: stretch;
-      width: 100%;
-    }
-
-    .input-group-text {
-      background: var(--gray-100);
-      color: var(--gray-600);
-    }
-    .itemsLength {
-      position: relative !important;
-    bottom: 22px !important;
-    }
-  </style>
-</head>
-
-<div ng-show="loading" class="loader loader-wrapper">
-  <img src="loaderUrl" />
-</div>
-<!--nswms_main_header starts-->
-<div class="nswms_main_header d-flex justify-content-between align-items-center">
-  <div class="header_left">
-    <span ng-click="goBack()">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    </span>
-  </div>
-  <div class="header_center_logo">
-    <h4>Pick List</h4>
-  </div>
-  <div class="header_right">
-    <span ng-click="logOut()">
-      <i class="fa fa-power-off" aria-hidden="true"></i>
-    </span>
-  </div>
-</div>
-
-<body ng-controller="MainCtrl as vm" class="pb-5 n">
-  <div class="container py-3 nswms_main_body">
-    <div class="page-header">
-      <i class="bi bi-box-seam text-primary" style="font-size:1.6rem"></i>
-
-      <div class="ms-auto text-end">
-        <div class="small-muted">Logged in:</div>
-        <div class="fw-semibold">{{vm.loggedInUser}} • <span class="text-primary">{{vm.loggedInLocation.label}}</span>
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pick List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="customCss" />
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="customJs"></script>
+    <script id="myDataObj" type="application/json">
+      dataObj
+    </script>
+  </head>
+  <body ng-controller="MainCtrl as vm" class="pb-5 n">
+    <div ng-show="loading" class="loader loader-wrapper">
+      <img src="loaderUrl" />
+    </div>
+    <!--nswms_main_header starts-->
+    <div class="nswms_main_header d-flex justify-content-between align-items-center">
+      <div class="header_left">
+        <span ng-click="goBack()">
+          <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="header_center_logo">
+        <h4>Pick List</h4>
+      </div>
+      <div class="header_right">
+        <span ng-click="logOut()">
+          <i class="fa fa-power-off" aria-hidden="true"></i>
+        </span>
       </div>
     </div>
-    <div class="filter-card">
-      <div class="row g-3">
-        <div class="col-md-4">
-          <label class="form-label small mb-1">Search</label>
-          <div class="input-group input-group-sm">
-            <span class="input-group-text"><i class="fa fa-search"></i></span>
-            <input class="form-control" ng-model="filters.search" placeholder="Order..." />
+    <div class="container py-3 nswms_main_body">
+      <div class="page-header">
+        <i class="bi bi-box-seam text-primary" style="font-size: 1.6rem"></i>
+        <div class="ms-auto text-end">
+          <div class="small-muted">
+            <i class="fa fa-user-circle text-primary me-1"></i>
+            Logged in:
+            <span class="fw-semibold text-primary">{{vm.locObj.name}}</span>
           </div>
         </div>
-
-        <div class="col-md-4">
-          <label class="form-label small mb-1">Search</label>
-          <input class="form-control form-control-sm" ng-model="filters.type" placeholder="Type to search..."
-            list="itemTypeOptions" />
-          <datalist id="itemTypeOptions">
-            <option value="Inventory"></option>
-            <option value="Non-Inventory">
-            <option value="Reservations">
-            <option value="Backorder">
-          </datalist>
-        </div>
       </div>
-    </div>
-    <!-- STEP 1: Orders list -->
-    <div ng-show="vm.step===1" class="row g-3">
-      <div class="col-12 col-md-6 col-xl-4" ng-repeat="order in vm.orders">
-        <div class="card light h-100">
-          <div class="card-header light d-flex justify-content-between align-items-center">
-            <div>
-              <div class="fw-semibold">Order #{{order.id}}</div>
-              <div class="small-muted">Customer: {{order.customer}}</div>
-              <div class="small-muted">Total Qty: {{order.totalQty}}</div>
-
+      <!-- STEP 1: Orders list -->
+      <div ng-show="vm.step===1" class="row g-3">
+        <div class="filter-card">
+          <div class="row g-3">
+            <div class="col-md-6 col-6">
+              <label class="form-label small mb-1">Search</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                <input class="form-control" ng-model="filters.search" placeholder="Order ID or Customer..." />
+              </div>
             </div>
-            <div class="text-end itemsLength">
-              <div class="small"><span class="badge bg-info text-dark">{{order.lines.length}} items</span></div>
-              <!-- <div class="small-muted mt-1">Assigned: <strong>{{order.assignedTo || 'Unassigned'}}</strong></div> -->
+            <div class="col-md-6 col-6">
+              <label class="form-label small mb-1">Assign Order</label>
+              <input
+                class="form-control form-control-sm"
+                ng-model="filters.assignOrder"
+                ng-blur="assignOrder()"
+                placeholder="Assign Order..."
+              />
             </div>
           </div>
-          <div class="card-footer bg-transparent d-flex gap-2 justify-content-end">
-            <button class="btn btn-primary btn-sm btn-action" ng-click="vm.startPicking(order)">
-              <i class="bi bi-play-fill me-1"></i>Start
-            </button>
+        </div>
+        <div class="col-12 col-md-6 col-xl-4" ng-repeat="order in vm.orders | filter:orderSearchFilter">
+          <div class="card light h-100">
+            <div class="card-header light d-flex justify-content-between align-items-center">
+              <div>
+                <div class="fw-semibold">Order #{{order.orderId}}</div>
+                <div class="small-muted">Assignment Header: {{order.parentId}}</div>
+                <div class="small-muted">Customer: {{order.customer}}</div>
+                <div class="small-muted">Date: {{order.trandate}}</div>
+                <div class="small-muted">Total Qty: {{order.totalQty}}</div>
+                <div class="small-muted">Pending Items: {{order.pendingItems}}</div>
+                <div class="small-muted">Picked Items: {{order.pickedItems}}</div>
+                <div class="small-muted">Partially Picked Items: {{order.partiallyPickedItems}}</div>
+              </div>
+              <div class="text-end itemsLength">
+                <div class="small">
+                  <span class="badge bg-info text-dark">{{order.totalItems}} items</span>
+                </div>
+              </div>
             </div>
+            <div class="card-footer bg-transparent d-flex gap-2 justify-content-end">
+              <button class="btn btn-primary btn-sm btn-action" ng-click="vm.startPicking(order.id)">
+                <i class="bi bi-play-fill me-1"></i>
+                Start
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-
       <!-- STEP 2: Items in selected order -->
       <div ng-show="vm.step===2">
         <div class="d-flex align-items-center mb-3">
-          <button class="btn btn-outline-secondary btn-sm me-2" ng-click="vm.backToOrders()"><i
-              class="bi bi-arrow-left"></i></button>
-          <h2 class="h5 m-0">Order #{{vm.activeOrder.id}} — Items</h2>
+          <button class="btn btn-outline-secondary btn-sm me-2" ng-click="vm.backToOrders()">
+            <i class="fa fa-arrow-left"></i>
+          </button>
+          <h2 class="h5 m-0">Order #{{vm.activeOrder.orderId}} — Items</h2>
           <div class="ms-auto small-muted">Customer: {{vm.activeOrder.customer}}</div>
-          <div class="ms-auto small-muted">Total Qty: {{vm.activeOrder.qty}}</div>
-
         </div>
 
-        <div class="row items-grid g-3">
-          <div class="col-12 col-md-6" ng-repeat="(li, line) in vm.activeOrder.lines">
-            <div class="card light item-card" ng-attr-id="itemCard{{li}}">
-              <div class="card-header light d-flex align-items-center justify-content-between item-header">
-                <div class="d-flex align-items-center gap-3">
-                  <div>
-                    <div class="fw-semibold">{{line.itemName}}</div>
-                    <div class="small-muted">Item: {{line.itemId}} • UPC: {{line.upc}}</div>
-                    <div class="small-muted">Item Location: <strong>{{line.itemLocationLabel}}</strong></div>
-                  </div>
-                </div>
+        <!-- New Row with Scan Bin Input + Icons -->
+        <div class="d-flex align-items-center mb-3">
+          <div class="ms-auto" style="width: 250px">
+            <!-- adjust width as needed -->
+            <div class="input-group input-group-sm">
+              <!-- Left Icon -->
+              <span class="input-group-text">
+                <i class="fa fa-barcode"></i>
+              </span>
 
-                <div class="text-end">
-                  <div><span class="badge bg-secondary">Order Qty: {{line.orderQty}}</span></div>
-                  <div class="mt-1"><span class="badge bg-success">Picked: {{line.pickedQty || 0}}</span></div>
+              <!-- Input Field -->
+              <input
+                type="text"
+                class="form-control"
+                ng-blur="vm.onScanBin()"
+                placeholder="Scan Bin"
+                ng-model="vm.scanBin"
+              />
 
-                  <!-- Reassign button moved to item header; visible only per rules -->
-                  <div class="mt-2">
-                    <button class="btn btn-sm btn-warning d-none" ng-if="false">placeholder</button>
-                    <button class="btn btn-sm btn-outline-warning" ng-if="vm.showReassign(line)"
-                      ng-click="vm.openReassign(line)">
-                      <i class="bi bi-person-plus"></i>
-                      <span class="ms-1">Reassign</span>
-                      <span class="ms-2 reassign-badge" ng-if="vm.reassignMode(line)==='location'">Location</span>
-                      <span class="ms-2 reassign-badge" ng-if="vm.reassignMode(line)==='zones'">Zones</span>
-                    </button>
-                  </div>
-
-                </div>
-              </div>
-
-              <!-- Card body (collapsible on mobile) -->
-              <div class="card-body collapse show" ng-attr-id="itemBody{{li}}">
-                <div class="mb-2 small-muted">Assigned Bins (Exact — no surplus)</div>
-
-                <div class="d-flex flex-column gap-2">
-                  <div class="d-flex align-items-center justify-content-between p-2 rounded bin-row"
-                    ng-repeat="(bi, bin) in line.assignedBins">
-                    <div class="d-flex align-items-center gap-2">
-                      <span class="bin-chip"><i class="bi bi-hdd-stack"></i>{{bin.binId}}</span>
-                      <span class="qty-pill">Assigned: {{bin.assigned}}</span>
-                      <span class="qty-pill">Picked: {{bin.picked || 0}}</span>
-                    </div>
-                    <div class="d-flex gap-2 align-items-center">
-                      <!-- Keep old per-bin actions, but primary reassign is in header -->
-                      <button class="btn btn-outline-warning btn-sm btn-action" ng-click="vm.resolveShortage(line, bin)"
-                        title="Propose next FIFO bin if this bin is short"><i class="bi bi-arrow-repeat"></i></button>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-              <div class="card-footer d-flex gap-2">
-                <button class="btn btn-outline-secondary btn-tap" ng-click="vm.resolveItem(line)"><i
-                    class="bi bi-lightning-charge me-1"></i> Validate Now</button>
-                <button class="btn btn-primary btn-tap ms-auto" ng-click="vm.goToResolve(line)"><i
-                    class="bi bi-arrow-right me-1"></i> Continue</button>
-              </div>
-
-              <div class="text-end">
-                <div><span class="badge bg-secondary">Order Qty: {{line.orderQty}}</span></div>
-                <div class="mt-1"><span class="badge bg-success">Picked: {{line.pickedQty || 0}}</span></div>
-
-                <!-- Reassign button moved to item header; visible only per rules -->
-                <div class="mt-2">
-                  <button class="btn btn-sm btn-warning d-none" ng-if="false">placeholder</button>
-                  <button class="btn btn-sm btn-outline-warning" ng-if="vm.showReassign(line)" ng-click="vm.openReassign(line)">
-                    <i class="bi bi-person-plus"></i>
-                    <span class="ms-1">Reassign</span>
-                    <span class="ms-2 reassign-badge" ng-if="vm.reassignMode(line)==='location'">Location</span>
-                    <span class="ms-2 reassign-badge" ng-if="vm.reassignMode(line)==='zones'">Zones</span>
-                  </button>
-                </div>
-
-              </div>
-            </div>
-
-            <!-- Card body (collapsible on mobile) -->
-            <div class="card-body collapse show" ng-attr-id="itemBody{{li}}">
-              <div class="mb-2 small-muted">Assigned Bins (Exact — no surplus)</div>
-
-              <div class="d-flex flex-column gap-2">
-                <div class="d-flex align-items-center justify-content-between p-2 rounded bin-row" ng-repeat="(bi, bin) in line.assignedBins">
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="bin-chip"><i class="bi bi-hdd-stack"></i>{{bin.binId}}</span>
-                    <span class="qty-pill">Assigned: {{bin.assigned}}</span>
-                    <span class="qty-pill">Picked: {{bin.picked || 0}}</span>
-                  </div>
-                  <div class="d-flex gap-2 align-items-center">
-                    <!-- Keep old per-bin actions, but primary reassign is in header -->
-                    <button class="btn btn-outline-warning btn-sm btn-action" ng-click="vm.resolveShortage(line, bin)" title="Propose next FIFO bin if this bin is short"><i class="bi bi-arrow-repeat"></i></button>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="card-footer d-flex gap-2">
-              <button class="btn btn-outline-secondary btn-tap" ng-click="vm.resolveItem(line)"><i class="bi bi-lightning-charge me-1"></i> Validate Now</button>
-              <button class="btn btn-primary btn-tap ms-auto" ng-click="vm.goToResolve(line)"><i class="bi bi-arrow-right me-1"></i> Continue</button>
+              <!-- Right Icon -->
+              <span class="input-group-text">
+                <i class="fa fa-camera"></i>
+              </span>
             </div>
           </div>
         </div>
 
+        <div class="row items-grid g-3">
+          <div
+            class="col-12 col-md-6"
+            ng-repeat="item in (vm.filteredItems.length ? vm.filteredItems : vm.activeOrder.items)"
+          >
+            <div class="card light item-card">
+              <div class="card-header light d-flex align-items-center justify-content-between item-header">
+                <div>
+                  <div class="small-muted mb-1">
+                    <i class="fa fa-map-marker-alt text-primary me-1"></i>
+                    {{item.locationText}}
+                  </div>
+                  <div class="fw-semibold">{{item.displayName || item.itemName}}</div>
+                  <div class="small-muted">Item: {{item.itemId}} • UPC: {{item.upc}}</div>
+                  <div class="small-muted">
+                    <span ng-if="!item.isLot && !item.isSerial">Inventory Item</span>
+                    <span ng-if="item.isSerial && !item.isLot">Serialised Item</span>
+                    <span ng-if="item.isLot && !item.isSerial">Lot Numbered Item</span>
+                    <span ng-if="item.isLot && item.isSerial">
+                      {{ item.trackSNAtDelivery ? 'Serialised Lot Item' : 'Lot Numbered Item'}}
+                    </span>
+                    <span ng-if="item.trackSNAtDelivery" class="ms-2 badge bg-info text-dark">
+                      Tracks Serial at Delivery
+                    </span>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div><span class="badge bg-secondary">Total Assigned: {{item.totalAssignedQty}}</span></div>
+                  <div class="mt-1"><span class="badge bg-success">Total Picked: {{item.totalPickedQty}}</span></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="mb-2 small-muted">Bins</div>
+                <div class="d-flex flex-column gap-2">
+                  <div
+                    class="d-flex align-items-center justify-content-between p-2 rounded bin-row"
+                    ng-repeat="bin in item.proposedBins"
+                    ng-class="{
+                      'bg-warning bg-opacity-25': bin.isHighlighted, 
+                      'border border-2 border-primary': bin.isHighlighted
+                    }"
+                    style="transition: background 0.3s"
+                  >
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="bin-chip">
+                        <i class="bi bi-hdd-stack"></i>
+                        {{bin.binText}}
+                      </span>
+                      <span class="bin-chip" ng-if="bin.binzoneText">
+                        <i class="bi bi-hdd-stack"></i>
+                        {{bin.binzoneText}}
+                      </span>
+                      <span class="qty-pill">Assigned: {{bin.assignedQty}}</span>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                      <span class="badge bg-light text-dark">{{bin.statusText}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-tap" ng-click="">
+                  <i class="bi bi-lightning-charge me-1"></i>
+                  Validate Now
+                </button>
+                <button class="btn btn-primary btn-sm ms-auto" ng-click="vm.goToResolve(item)">
+                  <i class="bi bi-arrow-right me-1"></i>
+                  Pick Items
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="d-flex justify-content-end mt-3 gap-2">
           <button class="btn btn-outline-secondary" ng-click="vm.backToOrders()">Back</button>
           <button class="btn btn-success" ng-click="vm.reviewAll()">Review & Confirm</button>
         </div>
       </div>
-
       <!-- STEP 3: Resolve / Assign (consolidated) -->
       <div ng-show="vm.step===3">
         <div class="d-flex align-items-center mb-3">
-          <button class="btn btn-outline-secondary btn-sm me-2" ng-click="vm.step=2"><i
-              class="bi bi-arrow-left"></i></button>
+          <button class="btn btn-outline-secondary btn-sm me-2" ng-click="vm.step=2">
+            <i class="bi bi-arrow-left"></i>
+          </button>
           <h2 class="h5 m-0">Resolve & Assign — Order #{{vm.activeOrder.id}}</h2>
         </div>
-
         <div class="card light">
           <div class="card-header light">Summary</div>
           <div class="card-body">
@@ -303,8 +248,6 @@
                     <td class="text-end">{{bin.picked || 0}}</td>
                     <td class="text-end">{{bin.assigned - (bin.picked||0)}}</td>
                     <td class="text-end">
-                      <button class="btn btn-sm btn-outline-warning me-1" ng-click="vm.resolveShortage(line, bin)">Next
-                        FIFO</button>
                       <button class="btn btn-sm btn-outline-info" ng-click="vm.openReassign(line)">Reassign</button>
                     </td>
                   </tr>
@@ -315,14 +258,14 @@
           </div>
           <div class="card-footer d-flex justify-content-end gap-2">
             <button class="btn btn-outline-secondary" ng-click="vm.step=2">Back</button>
-            <button class="btn btn-success" ng-click="vm.confirmFulfillment()"><i
-                class="bi bi-check2-circle me-1"></i>Confirm & Fulfill</button>
+            <button class="btn btn-success" ng-click="vm.confirmFulfillment()">
+              <i class="bi bi-check2-circle me-1"></i>
+              Confirm & Fulfill
+            </button>
           </div>
         </div>
       </div>
-
     </div>
-
     <!-- sticky footer for mobile/quick actions -->
     <div class="sticky-footer d-md-none">
       <div class="d-flex gap-2">
@@ -330,44 +273,108 @@
         <button class="btn btn-success flex-fill" ng-click="vm.reviewAll()">Review & Confirm</button>
       </div>
     </div>
-
     <!-- Modal: Resolve Shortage / Next FIFO Suggestion -->
     <div class="modal fade" id="nextBinModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Next FIFO Bin Suggestion</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <!-- Header -->
+          <div
+            class="modal-header d-flex justify-content-between align-items-center"
+            style="background: #222c69; color: #fff"
+          >
+            <h5 class="modal-title">Pick Item</h5>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-success btn-sm" ng-click="vm.saveNextBinDetails()">Save</button>
+            </div>
           </div>
+          <!-- Body -->
           <div class="modal-body">
-            <div class="small-muted mb-2">If current bin is short, the system suggests the next bin(s),
-              <strong>excluding</strong> already reserved quantities.</div>
-            <div class="mb-2"><strong>Item:</strong> {{vm.modal.item.itemName}}</div>
-            <div class="mb-2"><strong>Current Bin:</strong> <span class="bin-chip">{{vm.modal.bin.binId}}</span>
-              (Assigned {{vm.modal.bin.assigned}})</div>
-            <div class="mb-3"><strong>Shortfall:</strong> {{vm.modal.shortfall}} qty</div>
-            <div class="list-group">
-              <div class="list-group-item d-flex justify-content-between align-items-center"
-                ng-repeat="s in vm.modal.suggestions">
-                <div>
-                  <span class="bin-chip">{{s.binId}}</span>
-                  <small class="text-muted ms-2">Free: {{s.freeQty}}</small>
+            <!-- Item Details -->
+            <div class="mb-3">
+              <div>
+                <strong>Item :</strong>
+                {{vm.modal.item.itemName}}
+              </div>
+              <div>
+                <strong>Description :</strong>
+                {{vm.modal.item.description}}
+              </div>
+              <div>
+                <strong>Order Qty :</strong>
+                {{vm.modal.item.orderQty}}
+              </div>
+              <div>
+                <strong>Picked Qty :</strong>
+                {{vm.totalPicked()}}
+              </div>
+            </div>
+            <hr />
+            <!-- Inputs Row -->
+            <div class="row g-2 align-items-center mb-2">
+              <!-- Select Bin with Camera -->
+              <div class="col-md-3">
+                <div class="input-group">
+                  <select
+                    class="form-select"
+                    ng-model="vm.modal.selectedBin"
+                    ng-options="s.binId for s in vm.modal.suggestions"
+                  >
+                    <option value="">Select Bin</option>
+                  </select>
+                  <span class="input-group-text">
+                    <i class="fa fa-camera"></i>
+                  </span>
                 </div>
-                <div>
-                  <input type="number" class="form-control form-control-sm" style="width:100px" min="0"
-                    max="{{s.freeQty}}" ng-model="s.takeQty">
+              </div>
+              <!-- Scan Lot with Camera -->
+              <div class="col-md-4">
+                <div class="input-group">
+                  <input type="text" class="form-control" ng-model="vm.modal.lotNumber" placeholder="Scan lot" />
+                  <span class="input-group-text">
+                    <i class="fa fa-camera"></i>
+                  </span>
+                </div>
+              </div>
+              <!-- Quantity (No Camera) -->
+              <div class="col-md-3">
+                <input type="number" class="form-control" ng-model="vm.modal.enteredQty" placeholder="Quantity" />
+              </div>
+              <!-- Add Button -->
+              <div class="col-md-2">
+                <button class="btn btn-danger w-100" ng-click="vm.addNextBinDetail()">ADD DETAILS</button>
+              </div>
+            </div>
+            <!-- Added Details Cards -->
+            <div class="mt-3">
+              <div class="row">
+                <div class="col-md-4 col-sm-6 mb-3" ng-repeat="d in vm.modal.details">
+                  <div class="card p-2 position-relative h-100">
+                    <button
+                      class="btn btn-sm btn-outline-danger position-absolute"
+                      style="top: 5px; right: 5px"
+                      ng-click="vm.removeBin($index)"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                    <div>
+                      <div>
+                        <strong>Bin Number :</strong>
+                        {{d.binId}}
+                      </div>
+                      <div>
+                        <strong>Picked Qty :</strong>
+                        {{d.enteredQty}}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button class="btn btn-primary" ng-click="vm.applyNextBins()">Apply</button>
-          </div>
         </div>
       </div>
     </div>
-
     <!-- Modal: Reassign (Item-level) -->
     <div class="modal fade" id="reassignModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -377,46 +384,67 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <div class="small-muted mb-2">Mode: <strong>{{vm.modal.mode}}</strong></div>
-
+            <div class="small-muted mb-2">
+              Mode:
+              <strong>{{vm.modal.mode}}</strong>
+            </div>
             <!-- Location mode: full location reassignment -->
             <div ng-if="vm.modal.mode==='location'">
-              <div class="mb-2"><strong>Current Item Location:</strong> {{vm.modal.item.itemLocationLabel}}</div>
+              <div class="mb-2">
+                <strong>Current Item Location:</strong>
+                {{vm.modal.item.itemLocationLabel}}
+              </div>
               <div class="mb-3">
                 <label class="form-label">Assign full item to location</label>
-                <select class="form-select" ng-model="vm.modal.targetLocation"
-                  ng-options="l.label for l in vm.locations"></select>
+                <select
+                  class="form-select"
+                  ng-model="vm.modal.targetLocation"
+                  ng-options="l.label for l in vm.locations"
+                ></select>
               </div>
               <div class="mb-3">
                 <label class="form-label">Assign to picker</label>
-                <select class="form-select" ng-model="vm.modal.targetPicker"
-                  ng-options="p for p in vm.pickers"></select>
+                <select
+                  class="form-select"
+                  ng-model="vm.modal.targetPicker"
+                  ng-options="p for p in vm.pickers"
+                ></select>
               </div>
             </div>
-
             <!-- Zones mode: choose which zone/bin to reassign -->
             <div ng-if="vm.modal.mode==='zones'">
               <div class="mb-2"><strong>Assigned Zones/Bins (select bins to reassign):</strong></div>
               <div class="list-group mb-3">
-                <label class="list-group-item d-flex justify-content-between align-items-center"
-                  ng-repeat="b in vm.modal.zoneOptions">
+                <label
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                  ng-repeat="b in vm.modal.zoneOptions"
+                >
                   <div>
-                    <input type="checkbox" ng-model="b._checked"> <span class="bin-chip">{{b.binId}}</span>
+                    <input type="checkbox" ng-model="b._checked" />
+                    <span class="bin-chip">{{b.binId}}</span>
                     <small class="text-muted ms-2">Assigned: {{b.assigned}} • Picked: {{b.picked||0}}</small>
                   </div>
                   <div>
-                    <input class="form-control form-control-sm" style="width:80px; display:inline-block"
-                      ng-model="b._reassignQty" min="0" max="{{b.assigned - (b.picked||0)}}" placeholder="qty">
+                    <input
+                      class="form-control form-control-sm"
+                      style="width: 80px; display: inline-block"
+                      ng-model="b._reassignQty"
+                      min="0"
+                      max="{{b.assigned - (b.picked||0)}}"
+                      placeholder="qty"
+                    />
                   </div>
                 </label>
               </div>
               <div class="mb-3">
                 <label class="form-label">Assign selected to picker</label>
-                <select class="form-select" ng-model="vm.modal.targetPicker"
-                  ng-options="p for p in vm.pickers"></select>
+                <select
+                  class="form-select"
+                  ng-model="vm.modal.targetPicker"
+                  ng-options="p for p in vm.pickers"
+                ></select>
               </div>
             </div>
-
           </div>
           <div class="modal-footer">
             <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -425,5 +453,5 @@
         </div>
       </div>
     </div>
-
+  </body>
 </html>
