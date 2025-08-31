@@ -1,104 +1,131 @@
 angular.module('pickApp', []).controller('MainCtrl', [
   '$scope',
   '$window',
-  function ($scope, $window) {
+  '$http',
+  function ($scope, $window, $http) {
+    let jsonText = document.getElementById('myDataObj').textContent;
+    $scope.urlObj = JSON.parse(jsonText);
+    var ajaxUrl = $scope.urlObj['ajaxUrl'];
+    $scope.loading = false;
     var vm = this;
     vm.step = 1;
-    // Simulated logged-in user/location
-    vm.loggedInUser = 'Eshwar';
-    vm.loggedInLocation = { locationId: 'LOC-2', label: 'Floor 2 - Zone A' };
-
-    // Demo pickers and locations
-    vm.pickers = ['Eshwar', 'Sam', 'Asha', 'Maya'];
-    vm.locations = [
-      { locationId: 'LOC-1', label: 'Floor 1 - Zone A' },
-      { locationId: 'LOC-2', label: 'Floor 2 - Zone A' },
-      { locationId: 'LOC-3', label: 'Floor 1 - Zone B' },
-    ];
-
-    $scope.loading = false;
+    vm.scanBin = '';
+    vm.filteredItems = [];
 
     $scope.goBack = function () {
       $window.history.back();
     };
 
-    // Demo orders (items include itemLocationId + label)
-    vm.orders = [
-      {
-        id: 'SO1001',
-        customer: 'Health Active',
-        assignedTo: 'Eshwar',
-        tags: ['Priority', 'Zone A'],
-        lines: [
-          {
-            itemId: 'ITEM-100',
-            itemName: 'Vitamin C 500mg',
-            upc: '123456789012',
-            orderQty: 10,
-            pickedQty: 0,
-            itemLocationId: 'LOC-1',
-            itemLocationLabel: 'Floor 1 - Zone A',
-            assignedBins: [
-              { binId: 'A-01', assigned: 6, picked: 0 },
-              { binId: 'A-02', assigned: 4, picked: 0 },
-            ],
-          },
-          {
-            itemId: 'ITEM-200',
-            itemName: 'Omega 3',
-            upc: '999888777666',
-            orderQty: 8,
-            pickedQty: 0,
-            itemLocationId: 'LOC-2',
-            itemLocationLabel: 'Floor 2 - Zone A',
-            assignedBins: [{ binId: 'B-10', assigned: 8, picked: 0 }],
-          },
-        ],
-      },
-      {
-        id: 'SO1002',
-        customer: 'Wellness Mart',
-        assignedTo: 'Sam',
-        tags: ['Standard', 'Zone B'],
-        lines: [
-          {
-            itemId: 'ITEM-100',
-            itemName: 'Vitamin C 500mg',
-            upc: '123456789012',
-            orderQty: 14,
-            pickedQty: 0,
-            itemLocationId: 'LOC-1',
-            itemLocationLabel: 'Floor 1 - Zone A',
-            assignedBins: [
-              { binId: 'A-01', assigned: 4, picked: 0 },
-              { binId: 'A-02', assigned: 7, picked: 0 },
-              { binId: 'A-03', assigned: 3, picked: 0 },
-            ],
-          },
-        ],
-      },
-    ];
-
-    // Mock: global live bin availability (would come from search/API)
-    vm.binAvailability = {
-      'A-01': { onHand: 4, reservedOther: 0 }, // dropped from 6 → 4
-      'A-02': { onHand: 7, reservedOther: 4 }, // 3 free
-      'A-03': { onHand: 5, reservedOther: 2 },
-      'B-10': { onHand: 8, reservedOther: 0 },
+    $scope.filters = {
+      search: '',
+      assignOrder: '',
     };
 
-    vm.openOrder = function (order) {
-      vm.activeOrder = order;
-      vm.step = 2;
+    $scope.orderSearchFilter = function (order) {
+      var search = ($scope.filters.search || '').toLowerCase();
+      if (!search) return true;
+      return (
+        (order.orderId && order.orderId.toLowerCase().indexOf(search) !== -1) ||
+        (order.customer && order.customer.toLowerCase().indexOf(search) !== -1)
+      );
     };
-    vm.startPicking = vm.openOrder;
+
+    $scope.get_lists = function () {
+      $scope.loading = true;
+      $http
+        .get(
+          ajaxUrl +
+            '&empId=' +
+            $scope.urlObj['empId'] +
+            '&ref=get_lists' +
+            '&locationId=' +
+            $scope.urlObj['locationId'],
+        )
+        .then(
+          function (response) {
+            let data = response['data'];
+            vm.pickers = data['pickers'];
+            vm.orders = data['assigned_orders'];
+            vm.locObj = data['locationObj'];
+
+            $scope.loading = false;
+          },
+          function (response) {
+            $scope.loading = false;
+            alert('error::::::');
+          },
+        );
+    };
+
+    $scope.get_lists();
+
+    $scope.assignOrder = function () {
+      var locationId = $scope.urlObj['locationId'];
+      var empId = $scope.urlObj['empId'];
+      var assignOrder = $scope.filters.assignOrder;
+      if (!assignOrder) {
+        return;
+      }
+
+      $scope.loading = true;
+      $http({
+        method: 'POST',
+        url: ajaxUrl + '&ref=assign_order',
+        data: {
+          locationId: locationId,
+          empId: empId,
+          assignOrder: assignOrder.trim(),
+        },
+      }).then(
+        function (response) {
+          $scope.loading = false;
+          if (response.data.error) {
+            alert(response.data.error);
+            $scope.filters.assignOrder = '';
+            return;
+          }
+
+          if (response.data.assignmentId) {
+            confirm('Order assigned successfully');
+            vm.startPicking(response.data.assignmentId);
+          }
+        },
+        function (error) {
+          $scope.loading = false;
+          alert('Failed to assign order');
+        },
+      );
+    };
+
+    vm.startPicking = function (assignmentId) {
+      $scope.loading = true;
+      $http
+        .get(
+          ajaxUrl +
+            '&ref=get_assignment_items&empId=' +
+            $scope.urlObj['empId'] +
+            '&assignmentId=' +
+            encodeURIComponent(assignmentId),
+        )
+        .then(
+          function (response) {
+            $scope.loading = false;
+            vm.activeOrder = response.data; // Expecting item details in response.data
+            vm.step = 2;
+            $scope.$applyAsync();
+          },
+          function (error) {
+            $scope.loading = false;
+            alert('Failed to load assignment item details');
+          },
+        );
+    };
+
     vm.backToOrders = function () {
       vm.step = 1;
       vm.activeOrder = null;
     };
-    vm.goToResolve = function (line) {
-      vm.step = 3;
-    };
+
     vm.reviewAll = function () {
       vm.step = 3;
     };
@@ -216,6 +243,16 @@ angular.module('pickApp', []).controller('MainCtrl', [
       vm._nextModal = bootstrap.Modal.getOrCreateInstance(modalEl);
       vm._nextModal.show();
     };
+    vm.goToResolve = function (item) {
+      if (!item || !item.proposedBins || !item.proposedBins.length) {
+        alert('No bins to pick for this item.');
+        return;
+      }
+      vm.modal = { item: item, bins: item.proposedBins };
+      var modalEl = document.getElementById('nextBinModal');
+      vm._nextModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+      vm._nextModal.show();
+    };
 
     vm.applyNextBins = function () {
       var line = vm.modal.item;
@@ -264,6 +301,38 @@ angular.module('pickApp', []).controller('MainCtrl', [
 
     vm.confirmFulfillment = function () {
       alert('Confirmation submitted. In production, this would create Item Fulfillment and update assignments.');
+    };
+
+    vm.onScanBin = function () {
+      var binInput = (vm.scanBin || '').trim();
+      if (!binInput) return;
+
+      // Find items with this bin in proposedBins
+      var matchingItems = (vm.activeOrder.items || []).filter(function (item) {
+        return (item.proposedBins || []).some(function (bin) {
+          return bin.binId === binInput || bin.binText === binInput;
+        });
+      });
+
+      if (matchingItems.length === 0) {
+        alert('No items found for this bin.');
+        vm.scanBin = '';
+        vm.filteredItems = [];
+        return;
+      }
+      if (matchingItems.length === 1) {
+        // Directly open popup for the only matching item
+        vm.goToResolve(matchingItems[0]);
+        vm.filteredItems = [];
+        return;
+      }
+      // Show filtered items for user to select
+      vm.filteredItems = matchingItems;
+    };
+
+    vm.clearBinFilter = function () {
+      vm.scanBin = '';
+      vm.filteredItems = [];
     };
   },
 ]);
